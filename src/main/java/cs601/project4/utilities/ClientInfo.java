@@ -1,9 +1,11 @@
 package cs601.project4.utilities;
 
+import java.io.Serializable;
+
 /**
  * A class to maintain info about each client.
  */
-public class ClientInfo {
+public class ClientInfo implements Serializable {
 
     private String name;
 
@@ -21,5 +23,12 @@ public class ClientInfo {
      */
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientInfo{" +
+                "name='" + name + '\'' +
+                '}';
     }
 }
