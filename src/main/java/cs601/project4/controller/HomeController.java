@@ -1,17 +1,13 @@
 package cs601.project4.controller;
 
 import com.google.gson.Gson;
+import cs601.project4.server.AppEvent;
 import cs601.project4.server.LoginServerConstants;
-import cs601.project4.utilities.ClientInfo;
-import cs601.project4.utilities.Config;
-import cs601.project4.utilities.HTTPFetcher;
-import cs601.project4.utilities.LoginUtilities;
-import org.eclipse.jetty.http.HttpStatus;
+import cs601.project4.utilities.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -35,16 +31,11 @@ public class HomeController {
         String nonce = LoginUtilities.generateNonce(state);
 
         // retrieve the config info from the context
-        Config c = AppEvent.getConfig();
+        Config config = (Config) req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
 
-        req.getSession().setAttribute(LoginServerConstants.CLIENT_INFO_KEY, c);
-        System.out.println(c);
+        System.out.println(config);
 
         // Generate url for request to Slack
-//        String url = LoginUtilities.generateSlackAuthorizeURL(config.getClient_id(),
-//                state,
-//                nonce,
-//                config.getRedirect_url());
 
         String url = LoginUtilities.generateSlackAuthorizeURL("2464212157.2668274745974",
                 state,
@@ -53,13 +44,16 @@ public class HomeController {
 
         model.addAttribute("url", url);
 
+        req.getSession().invalidate();
+
         return "index";
     }
 
     @GetMapping("/login")
-    public String login(Model model, HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public String login(Model model, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // retrieve the ID of this session
         String sessionId = req.getSession(true).getId();
+        System.out.println(sessionId);
 
         // determine whether the user is already authenticated
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
@@ -69,8 +63,14 @@ public class HomeController {
         }
 
         // retrieve the config info from the context
-        Config config = AppEvent.getConfig();
+        Config con = AppEvent.getConfig();
+        req.getSession().setAttribute(LoginServerConstants.CONFIG_KEY, new Gson().toJson(con));
+        //Config config = (Config) req.getSession().getServletContext().getAttribute(LoginServerConstants.CONFIG_KEY);
+        //Config config = (Config) req.getSession().getAttribute(LoginServerConstants.CONFIG_KEY);
 
+        Gson gson = new Gson();
+        Config config = gson.fromJson((String) req.getSession().getAttribute(LoginServerConstants.CONFIG_KEY), Config.class);
+        //Config conf = (Config) req.getSession().getAttribute(LoginServerConstants.CONFIG_KEY);
         System.out.println(config.toString());
 
         String code = req.getParameter(LoginServerConstants.CODE_KEY);
@@ -93,6 +93,7 @@ public class HomeController {
 
     @GetMapping("/home")
     public String home(Model model, HttpServletRequest request) {
+        System.out.println("HOME "+ request.getSession().getId());
         model.addAttribute("name", "rg");
         return "home";
     }
