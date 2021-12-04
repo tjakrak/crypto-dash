@@ -9,10 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 @SpringBootApplication(scanBasePackages = "cs601.project4.controller")
-public class AppEvent {
+public class NoStayHomeAppServer {
     public static void main(String[] args) throws FileNotFoundException {
         // read the client id and secret from a config file
-        SpringApplication app = new SpringApplication(AppEvent.class);
+        SpringApplication app = new SpringApplication(NoStayHomeAppServer.class);
         app.run(args);
     }
 

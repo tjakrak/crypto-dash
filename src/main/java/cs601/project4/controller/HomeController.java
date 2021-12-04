@@ -1,7 +1,7 @@
 package cs601.project4.controller;
 
 import com.google.gson.Gson;
-import cs601.project4.server.AppEvent;
+import cs601.project4.server.NoStayHomeAppServer;
 import cs601.project4.server.LoginServerConstants;
 import cs601.project4.utilities.*;
 import org.springframework.stereotype.Controller;
@@ -19,32 +19,29 @@ public class HomeController {
     public String index(Model model, HttpServletRequest req) throws FileNotFoundException {
         // retrieve the ID of this session
         String sessionId = req.getSession(true).getId();
-        System.out.println(sessionId);
 
-        // check if user already logged in by check the session
+        // determine whether the user is already authenticated
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
-
         if (clientInfoObj != null) {
             return "redirect:/home ";
         }
 
+        // to be passed to slackAPI for oauth
         String state = sessionId;
         String nonce = LoginUtilities.generateNonce(state);
 
-        Config con = AppEvent.getConfig();
-        req.getSession().setAttribute(LoginServerConstants.CONFIG_KEY, new Gson().toJson(con));
-        // retrieve the config info from the context
-        Gson gson = new Gson();
-        Config config = gson.fromJson((String) req.getSession().getAttribute(LoginServerConstants.CONFIG_KEY), Config.class);
+        // adding client_key, secret_key and redirect uri information to the session attribute (so it can be shared across different controller)
+        // store it as json formatted string (GSON -> json)
+        Config config = NoStayHomeAppServer.getConfig();
+        req.getSession().setAttribute(LoginServerConstants.CONFIG_KEY, new Gson().toJson(config));
 
-        System.out.println(config);
-
-        // Generate url for request to Slack
+        // Generate url to send a request to SlackApi
         String url = LoginUtilities.generateSlackAuthorizeURL(config.getClient_id(),
                 state,
                 nonce,
                 config.getRedirect_url());
 
+        // adding the url to model so it can be read by thymeleaf html
         model.addAttribute("url", url);
 
         return "index";
@@ -54,37 +51,42 @@ public class HomeController {
     public String login(Model model, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         // retrieve the ID of this session
         String sessionId = req.getSession(true).getId();
-        System.out.println("session " + sessionId);
+//        System.out.println("session " + sessionId);
 //        System.out.println(req.getCookies()[0].getName());
 
         // determine whether the user is already authenticated
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
-
-        System.out.println("clientinfo " + clientInfoObj);
         if(clientInfoObj != null) {
             // already authed, no need to log in
             return "redirect:/home ";
         }
 
-        // retrieve the config info from the context
+        // retrieve the config info from the session attribute and convert it to Config object
         Gson gson = new Gson();
         Config config = gson.fromJson((String) req.getSession().getAttribute(LoginServerConstants.CONFIG_KEY), Config.class);
 
+        // getting the "code" parameter from the SLACK response
         String code = req.getParameter(LoginServerConstants.CODE_KEY);
 
+        // generate string url for slack from the config: client_id, client_secret, redirect_url
         String url = LoginUtilities.generateSlackTokenURL(config.getClient_id(), config.getClient_secret(), code, config.getRedirect_url());
 
+        // send get response to slack with the url generated above
         String responseString = HTTPFetcher.doGet(url, null);
 
+        // get the slack json response and put it to hashmap as key and value
         Map<String, Object> response = LoginUtilities.jsonStrToMap(responseString);
 
+        // verifying the response from slack API
         ClientInfo clientInfo = LoginUtilities.verifyTokenResponse(response, sessionId);
 
+        // if the user is not verified
         if(clientInfo == null) {
             return "login";
+        // if the user is verified
         } else {
             req.getSession().setAttribute(LoginServerConstants.CLIENT_INFO_KEY, new Gson().toJson(clientInfo));
-            return "login";
+            return "home";
         }
 
     }
