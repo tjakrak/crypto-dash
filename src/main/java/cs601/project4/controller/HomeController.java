@@ -86,7 +86,7 @@ public class HomeController {
         // if the user is verified
         } else {
             req.getSession().setAttribute(LoginServerConstants.CLIENT_INFO_KEY, new Gson().toJson(clientInfo));
-            return "home";
+            return "redirect:/home";
         }
 
     }
@@ -94,7 +94,9 @@ public class HomeController {
     @GetMapping("/home")
     public String home(Model model, HttpServletRequest request) {
         System.out.println("HOME "+ request.getSession().getId());
-        model.addAttribute("name", "rg");
+        Gson gson = new Gson();
+        ClientInfo clientInfo = gson.fromJson((String) request.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY), ClientInfo.class);
+        model.addAttribute("name", clientInfo.getName());
         return "home";
     }
 
