@@ -117,7 +117,7 @@ public class LoginUtilities {
         }
 
         // retrieve and decode id_token
-//        String idToken = URLDecoder.decode((String)map.get("id_token"), StandardCharsets.UTF_8);
+        // String idToken = URLDecoder.decode((String)map.get("id_token"), StandardCharsets.UTF_8);
         String idToken = (String)map.get("id_token");
         Map<String, Object> payloadMap = decodeIdTokenPayload(idToken);
 
@@ -130,7 +130,9 @@ public class LoginUtilities {
 
         // extract name from response
         String username = (String) payloadMap.get(LoginServerConstants.NAME_KEY);
-        return new ClientInfo(username);
+        String email = (String) payloadMap.get(LoginServerConstants.EMAIL);
+
+        return new ClientInfo(username, email);
     }
 
     /**

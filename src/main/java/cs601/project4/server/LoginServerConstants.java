@@ -39,4 +39,5 @@ public class LoginServerConstants {
 
     public static final String IS_AUTHED_KEY = "is_authed";
     public static final String NAME_KEY = "name";
+    public static final String EMAIL = "email";
 }

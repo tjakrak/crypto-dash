@@ -8,13 +8,15 @@ import java.io.Serializable;
 public class ClientInfo implements Serializable {
 
     private String name;
+    private String email;
 
     /**
      * Constructor
      * @param name
      */
-    public ClientInfo(String name) {
+    public ClientInfo(String name, String email) {
         this.name = name;
+        this.email = email;
     }
 
     /**
@@ -24,6 +26,19 @@ public class ClientInfo implements Serializable {
     public String getName() {
         return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
 
     @Override
     public String toString() {

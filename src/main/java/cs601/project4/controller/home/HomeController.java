@@ -1,4 +1,4 @@
-package cs601.project4.controller;
+package cs601.project4.controller.home;
 
 import com.google.gson.Gson;
 import cs601.project4.server.NoStayHomeAppServer;
@@ -6,9 +6,12 @@ import cs601.project4.server.LoginServerConstants;
 import cs601.project4.utilities.*;
 import cs601.project4.utilities.gson.ClientInfo;
 import cs601.project4.utilities.gson.SlackConfigApi;
+//import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -18,9 +21,10 @@ import java.util.Map;
 public class HomeController {
 
     @GetMapping("/")
-    public String index(Model model, HttpServletRequest req) throws FileNotFoundException {
+    public String getindex(Model model, HttpServletRequest req) throws FileNotFoundException {
         // retrieve the ID of this session
         String sessionId = req.getSession(true).getId();
+        System.out.println(sessionId);
 
         // determine whether the user is already authenticated
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
@@ -84,7 +88,7 @@ public class HomeController {
 
         // if the user is not verified
         if(clientInfo == null) {
-            return "login";
+            return "redirect: /";
         // if the user is verified
         } else {
             req.getSession().setAttribute(LoginServerConstants.CLIENT_INFO_KEY, new Gson().toJson(clientInfo));
@@ -94,12 +98,25 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String home(Model model, HttpServletRequest request) {
-        System.out.println("HOME "+ request.getSession().getId());
+    public String home(Model model, HttpServletRequest req) {
+        System.out.println("HOME "+ req.getSession().getId());
         Gson gson = new Gson();
-        ClientInfo clientInfo = gson.fromJson((String) request.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY), ClientInfo.class);
+        ClientInfo clientInfo = gson.fromJson((String) req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY), ClientInfo.class);
+        //model.addAttribute("email"), clientInfo.get);
         model.addAttribute("name", clientInfo.getName());
         return "home";
     }
 
+    @GetMapping("/logout")
+    public String logout(Model model, HttpServletRequest req) {
+        req.getSession().invalidate();
+        return "redirect:/";
+    }
+
+//    @GetMapping("/all-events/{pageNum}")
+//    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
+//                             @Param("sortField") String sortField,
+//                             HttpServletRequest req) {
+//        return "/";
+//    }
 }
