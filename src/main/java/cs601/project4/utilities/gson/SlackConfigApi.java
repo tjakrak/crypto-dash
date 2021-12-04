@@ -1,11 +1,11 @@
-package cs601.project4.utilities;
+package cs601.project4.utilities.gson;
 
 import java.io.Serializable;
 
 /**
  * A class parse necessary configuration info.
  */
-public class Config implements Serializable {
+public class SlackConfigApi implements Serializable {
 
     // These variable names violate Java style guidelines
     // in order to be consistent with the naming conventions
@@ -14,7 +14,7 @@ public class Config implements Serializable {
     private String client_id;
     private String client_secret;
 
-    public Config(String redirect_uri, String client_id, String client_secret) {
+    public SlackConfigApi(String redirect_uri, String client_id, String client_secret) {
         this.redirect_uri = redirect_uri;
         this.client_id = client_id;
         this.client_secret = client_secret;

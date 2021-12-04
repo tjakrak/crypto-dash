@@ -1,4 +1,4 @@
-package cs601.project4.utilities;
+package cs601.project4.utilities.gson;
 
 import java.io.Serializable;
 

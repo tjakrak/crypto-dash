@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import cs601.project4.server.NoStayHomeAppServer;
 import cs601.project4.server.LoginServerConstants;
 import cs601.project4.utilities.*;
+import cs601.project4.utilities.gson.ClientInfo;
+import cs601.project4.utilities.gson.SlackConfigApi;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +34,7 @@ public class HomeController {
 
         // adding client_key, secret_key and redirect uri information to the session attribute (so it can be shared across different controller)
         // store it as json formatted string (GSON -> json)
-        Config config = NoStayHomeAppServer.getConfig();
+        SlackConfigApi config = NoStayHomeAppServer.getConfig();
         req.getSession().setAttribute(LoginServerConstants.CONFIG_KEY, new Gson().toJson(config));
 
         // Generate url to send a request to SlackApi
@@ -63,13 +65,13 @@ public class HomeController {
 
         // retrieve the config info from the session attribute and convert it to Config object
         Gson gson = new Gson();
-        Config config = gson.fromJson((String) req.getSession().getAttribute(LoginServerConstants.CONFIG_KEY), Config.class);
+        SlackConfigApi slackConfigApi = gson.fromJson((String) req.getSession().getAttribute(LoginServerConstants.CONFIG_KEY), SlackConfigApi.class);
 
         // getting the "code" parameter from the SLACK response
         String code = req.getParameter(LoginServerConstants.CODE_KEY);
 
         // generate string url for slack from the config: client_id, client_secret, redirect_url
-        String url = LoginUtilities.generateSlackTokenURL(config.getClient_id(), config.getClient_secret(), code, config.getRedirect_url());
+        String url = LoginUtilities.generateSlackTokenURL(slackConfigApi.getClient_id(), slackConfigApi.getClient_secret(), code, slackConfigApi.getRedirect_url());
 
         // send get response to slack with the url generated above
         String responseString = HTTPFetcher.doGet(url, null);

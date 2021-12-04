@@ -3,12 +3,10 @@ package cs601.project4.utilities;
 import com.google.gson.Gson;
 //import cs601.project4.server.AppServer;
 import cs601.project4.server.LoginServerConstants;
+import cs601.project4.utilities.gson.ClientInfo;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.StringReader;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 
