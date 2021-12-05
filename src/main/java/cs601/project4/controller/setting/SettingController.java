@@ -28,7 +28,7 @@ public class SettingController {
     public String postUserSetting(@ModelAttribute("settingBean") SettingBean settingBean) {
         System.out.println("name: " + settingBean.getName());
         //update sql database;
-        return "redirect:/";
+        return "redirect:/home";
     }
 
 }

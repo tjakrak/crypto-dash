@@ -1,4 +1,4 @@
-package cs601.project4.utilities;
+package cs601.project4.database;
 
 import cs601.project4.utilities.gson.Event;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,7 +77,7 @@ public class JdbcManager {
         insertTransactionStmt.executeUpdate();
     }
 
-    public static List<Event> executeSelectAndPrint(Connection con) throws SQLException {
+    public static List<Event> getEvents(Connection con) throws SQLException {
         String selectAllContactsSql = "SELECT * FROM event";
         PreparedStatement selectAllContactsStmt = con.prepareStatement(selectAllContactsSql);
         ResultSet results = selectAllContactsStmt.executeQuery();
@@ -90,50 +90,40 @@ public class JdbcManager {
         return null;
     }
 
+    public static List<Event> getTransactions(Connection con, String sessionId) throws SQLException {
+        String selectAllContactsSql = "SELECT * FROM transaction WHERE buyer_id = " +
+                "(SELECT user_id FROM user_session WHERE session_id = '" + sessionId + "') OR seller_id =" +
+                "(SELECT user_id FROM user_session WHERE session_id = '" + sessionId + "');";
 
-
-
-
-    @Value("${spring.datasource.url}")
-    private String url;
-
-    @Value("${spring.datasource.username")
-    private String username;
-
-    @Value("${spring.datasource.password")
-    private String password;
+        PreparedStatement selectAllContactsStmt = con.prepareStatement(selectAllContactsSql);
+        ResultSet results = selectAllContactsStmt.executeQuery();
+        while(results.next()) {
+            System.out.printf("Name: %s\n", results.getString("name"));
+            System.out.printf("Extension: %s\n", results.getInt("extension"));
+            System.out.printf("Email: %s\n", results.getString("email"));
+            System.out.printf("Start Date: %s\n", results.getString("startdate"));
+        }
+        return null;
+    }
 
     public static void main(String[] args){
-
-        /*JdbcConfig config = Utilities.readConfig();
-        if(config == null) {
-            System.exit(1);
-        }*/
-
-        String a = "user037";
-        // Make sure that mysql-connector-java is added as a dependency.
-        // Force Maven to Download Sources and Documentation
-        try (Connection con = DriverManager
-                .getConnection("jdbc:mysql://localhost:3306/" + a, a, a)) {
-
-//            executeSelectAndPrint(con);
-//            System.out.println("*****************");
-
-            Calendar cal = Calendar.getInstance();
-            java.sql.Timestamp timestamp = new java.sql.Timestamp(cal.getTimeInMillis());
-
-            insertToUser(con,"NoStayHome", "rgtjakrakartadinata@dons.usfca.edu", "94536", timestamp);
-
-//            executeSelectAndPrint(con);
-//            System.out.println("*****************");
-//
-//            executeInsert(con,"Bertha", 9876, "bzuniga", "2009-09-01");
-//
-//            executeSelectAndPrint(con);
-//            System.out.println("*****************");
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        try (Connection connection = DBCPDataSource.getConnection()){
+//            insertToUser(connection, "Jose", 9984, "jsmith", "2026-09-01");
+        } catch(SQLException e) {
+            e.printStackTrace();
         }
     }
+
+
+
+
+//    @Value("${spring.datasource.url}")
+//    private String url;
+//
+//    @Value("${spring.datasource.username")
+//    private String username;
+//
+//    @Value("${spring.datasource.password")
+//    private String password;
+
 }

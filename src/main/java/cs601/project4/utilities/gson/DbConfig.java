@@ -10,20 +10,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "spring.datasource")
-public class JdbcConfig {
+public class DbConfig {
 
-    private String url;
+    private String database;
     private String username;
     private String password;
 
     /**
      * Config class constructor.
-     * @param url
+     * @param database
      * @param username
      * @param password
      */
-    public JdbcConfig(String url, String username, String password) {
-        this.url = url;
+    public DbConfig(String database, String username, String password) {
+        this.database = database;
         this.username = username;
         this.password = password;
     }
@@ -32,8 +32,8 @@ public class JdbcConfig {
      * Return the database property.
      * @return
      */
-    public String getUrl() {
-        return url;
+    public String getDatabase() {
+        return database;
     }
 
     /**
