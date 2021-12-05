@@ -12,7 +12,7 @@
         <header>
             <div id="header-left">
                 <!--upload logo to the page-->
-                <img src="../static/images/eventbase.png" width="150" th:src="@{images/eventbase.png}" />
+                <a href="/"><img src="../static/images/eventbase.png" width="150" th:src="@{images/eventbase.png}" /></a>
             </div>
             <div id="header-right">
                 <!--menu bar-->
@@ -25,24 +25,27 @@
             </div>
         </header>
     </div>
-
-    <div id="outer-body-bg">
+    <div id="outer-top-body-bg">
         <h1>Welcome <span th:text="${name}"></span>!</h1>
-        <div id="inner-body-bg">
-            <div id="wrapper-content">
-                <form action="/">
-                    <div id="search-bar-wrapper">
-                        <input class="search-bar" type="text" placeholder="Search events..">
-                    </div>
-                </form>
-                <table>
-                    <tr th:each="event : ${listEvents}">
-                        <td th:text = "${event.eventName}"></td>
-                    </tr>
-                </table>
-            </div>
+    </div>
+    <div id="inner-body-bg">
+        <div id="wrapper-content">
+            <form action="/">
+                <div id="search-bar-wrapper">
+                    <input class="search-bar" type="text" placeholder="Search events..">
+                </div>
+            </form>
+            <table>
+                <tr th:each="event : ${listEvents}">
+                    <td th:text = "${event.eventName}"></td>
+                </tr>
+            </table>
         </div>
     </div>
-
+    <div id="footer-wrapper">
+        <footer id="footer">
+            <p>Copyright 2014 &copy; Privacy Policy</p>
+        </footer>
+    </div>
 </body>
 </html>
