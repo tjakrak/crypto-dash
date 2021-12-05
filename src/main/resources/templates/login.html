@@ -26,6 +26,12 @@
         <div id="wrapper-content">
             <h1>Let's get the party started!</h1>
             <br />
+            <div th:if = "${isFail} == null">
+                <br />
+            </div>
+            <div th:unless = "${isFail} == true">
+                <p style="color:red">You must log in to continue</p>
+            </div>
             <br />
             <form action="/">
                 <a th:href="@{${url}}"><img src="https://platform.slack-edge.com/img/sign_in_with_slack@2x.png" /></a>

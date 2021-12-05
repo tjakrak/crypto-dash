@@ -23,6 +23,12 @@ public class HomeController {
         Gson gson = new Gson();
         ClientInfo clientInfo = gson.fromJson((String) req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY), ClientInfo.class);
 
+        // check if the user is not logged in
+        Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
+        if (clientInfoObj == null) {
+            return "redirect:/login ";
+        }
+
         List<Event> eventList = new ArrayList<>();
         Event e1 = new Event();
         e1.setEventName("haha");

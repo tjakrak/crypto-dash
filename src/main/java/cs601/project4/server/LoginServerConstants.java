@@ -5,7 +5,7 @@ package cs601.project4.server;
  */
 public class LoginServerConstants {
 
-
+    // constants necessary to generate url to send to slack to request for oauth
     public static final String HOST = "slack.com";
     public static final String AUTH_PATH = "openid/connect/authorize";
     public static final String TOKEN_PATH = "api/openid.connect.token";
@@ -22,12 +22,17 @@ public class LoginServerConstants {
     public static final String OK_KEY = "ok";
 
 
+    // constants to act as a key to be stored in our server session attribute
     public static final String CONFIG_KEY = "config_key";
     public static final String CLIENT_INFO_KEY = "client_info_key";
+    public static final String IS_FAIL_TO_LOGIN = "fail_to_login";
+
+
+    // slack sign in image button
     public static final String BUTTON_URL = "https://platform.slack-edge.com/img/sign_in_with_slack@2x.png";
 
 
-    public static final String IS_AUTHED_KEY = "is_authed";
+    // list of constants that matches with slack response json body
     public static final String NAME_KEY = "name";
     public static final String EMAIL = "email";
 }

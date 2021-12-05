@@ -1,6 +1,8 @@
 package cs601.project4.controller.home;
 
 import com.google.gson.Gson;
+import cs601.project4.database.DBCPDataSource;
+import cs601.project4.database.DataFetcherManager;
 import cs601.project4.server.LoginServerConstants;
 import cs601.project4.server.NoStayHomeAppServer;
 import cs601.project4.utilities.HTTPFetcher;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Map;
 
 @Controller
@@ -30,20 +34,29 @@ public class LoginController {
             return "redirect:/home ";
         } else if(clientConfigKeyObj != null) { // authenticated the user after pressing the slack login button
             Boolean verified = slackLoginVerifier(model, req, sessionId);
-
             if(!verified) {
+                req.getSession().invalidate();
                 return "redirect:/login";
             } else {
+                try (Connection connection = DBCPDataSource.getConnection()){
+                    String email = DataFetcherManager.getUserEmail(connection, sessionId);
+                    if (email.equals("")) {
+
+                    }
+                    System.out.println("EMAIL= " + email);
+                } catch(SQLException e) {
+                    e.printStackTrace();
+                }
                 return "redirect:/home";
             }
-        } else {
+        } else { // generate url to initiate an authentication request through slack
             // to be passed to slackAPI for oauth
             String state = sessionId;
             String nonce = LoginUtilities.generateNonce(state);
 
             // adding client_key, secret_key and redirect uri information to the session attribute (so it can be shared across different controller)
             // store it as json formatted string (GSON -> json)
-            SlackConfigApi config = NoStayHomeAppServer.getConfig();
+            SlackConfigApi config = NoStayHomeAppServer.readSlackAuthConfig();
             req.getSession().setAttribute(LoginServerConstants.CONFIG_KEY, new Gson().toJson(config));
 
             // Generate url to send a request to SlackApi
@@ -54,6 +67,8 @@ public class LoginController {
 
             // adding the url to model so it can be read by thymeleaf html
             model.addAttribute("url", url);
+
+            model.addAttribute("isFail", req.getSession().getAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN));
 
             return "login";
         }

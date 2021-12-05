@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public class JdbcManager {
+public class DataInsertionManager {
 
     public static void insertToUser(Connection con, String name, String email, String zipcode, Timestamp startdate) throws SQLException {
         String insertUserSql = "INSERT INTO user (name, email, zipcode, created_at) VALUES (?, ?, ?, ?);";
@@ -77,34 +77,6 @@ public class JdbcManager {
         insertTransactionStmt.executeUpdate();
     }
 
-    public static List<Event> getEvents(Connection con) throws SQLException {
-        String selectAllContactsSql = "SELECT * FROM event";
-        PreparedStatement selectAllContactsStmt = con.prepareStatement(selectAllContactsSql);
-        ResultSet results = selectAllContactsStmt.executeQuery();
-        while(results.next()) {
-            System.out.printf("Name: %s\n", results.getString("name"));
-            System.out.printf("Extension: %s\n", results.getInt("extension"));
-            System.out.printf("Email: %s\n", results.getString("email"));
-            System.out.printf("Start Date: %s\n", results.getString("startdate"));
-        }
-        return null;
-    }
-
-    public static List<Event> getTransactions(Connection con, String sessionId) throws SQLException {
-        String selectAllContactsSql = "SELECT * FROM transaction WHERE buyer_id = " +
-                "(SELECT user_id FROM user_session WHERE session_id = '" + sessionId + "') OR seller_id =" +
-                "(SELECT user_id FROM user_session WHERE session_id = '" + sessionId + "');";
-
-        PreparedStatement selectAllContactsStmt = con.prepareStatement(selectAllContactsSql);
-        ResultSet results = selectAllContactsStmt.executeQuery();
-        while(results.next()) {
-            System.out.printf("Name: %s\n", results.getString("name"));
-            System.out.printf("Extension: %s\n", results.getInt("extension"));
-            System.out.printf("Email: %s\n", results.getString("email"));
-            System.out.printf("Start Date: %s\n", results.getString("startdate"));
-        }
-        return null;
-    }
 
     public static void main(String[] args){
         try (Connection connection = DBCPDataSource.getConnection()){
@@ -113,8 +85,6 @@ public class JdbcManager {
             e.printStackTrace();
         }
     }
-
-
 
 
 //    @Value("${spring.datasource.url}")
