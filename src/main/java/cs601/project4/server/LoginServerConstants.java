@@ -5,17 +5,6 @@ package cs601.project4.server;
  */
 public class LoginServerConstants {
 
-    public static final String PAGE_HEADER = "<!DOCTYPE html>\n" +
-            "<html xmlns=\"http://www.w3.org/1999/xhtml\">\n" +
-            "<head>\n" +
-            "  <title>Log in with Slack</title>\n" +
-            "</head>\n" +
-            "<body>\n" +
-            "\n";
-
-    public static final String PAGE_FOOTER = "\n" +
-            "</body>\n" +
-            "</html>";
 
     public static final String HOST = "slack.com";
     public static final String AUTH_PATH = "openid/connect/authorize";
@@ -36,6 +25,7 @@ public class LoginServerConstants {
     public static final String CONFIG_KEY = "config_key";
     public static final String CLIENT_INFO_KEY = "client_info_key";
     public static final String BUTTON_URL = "https://platform.slack-edge.com/img/sign_in_with_slack@2x.png";
+
 
     public static final String IS_AUTHED_KEY = "is_authed";
     public static final String NAME_KEY = "name";

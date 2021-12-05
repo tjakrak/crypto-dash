@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Tickets Purchase</title>
+    <link href="../static/styles/style.css" th:href="@{styles/style.css}" rel="stylesheet" />
 </head>
 <body>
-
-<p>Login Unsuccessful</p>
-
+    <div id="wrapper">
+        <header>
+            <div id="header-left">
+                <img src="../static/images/eventbase.png" width="150" th:src="@{images/eventbase.png}" />
+            </div>
+        </header>
+    </div>
+    <a th:href="@{${url}}">Sign in with Slack</a>
 </body>
 </html>
