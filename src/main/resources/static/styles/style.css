@@ -13,7 +13,7 @@
 
 /* -------------------- HEADER -------------------*/
 #header-wrapper{
-    background:url(../images/header2-bg.png) repeat-x;
+    background:url(../images/header-bg.png) repeat-x;
     z-index: 5;
     height: 70px;
     position: relative;
@@ -63,7 +63,7 @@ header #header-right ul li a:hover{
 
 /* ----------------- Body Content ---------------------*/
 #outer-top-body-bg{
-    background:url(../images/header2-bg.png) repeat-x;
+    background:url(../images/header-bg.png) repeat-x;
     z-index:5;
     height:170px;
     position:relative;
@@ -104,7 +104,7 @@ header #header-right ul li a:hover{
 
 /* ------------------- Footer ----------------------*/
 #footer-wrapper{
-   background:url(../images/header2-bg.png) repeat-x;
+   background:url(../images/header-bg.png) repeat-x;
    position: relative;
    bottom: 0;
    margin-top: -130px;
