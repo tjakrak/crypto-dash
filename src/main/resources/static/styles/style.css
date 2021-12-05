@@ -11,17 +11,28 @@
     font-style: normal;
 }
 
-#wrapper{
-    background:url(../images/header-bg.png) repeat-x;
+/* -------------------- HEADER -------------------*/
+#header-wrapper{
+    background:url(../images/header2-bg.png) repeat-x;
     z-index:5;
     height:70px;
     position:relative;
     margin-top: 0px;
+    padding: 30px 30px 0px 60px;
 }
 
+
+/* ----------------- HEADER LEFT -----------------*/
+header #header-left{
+    float:left; width:500px;
+}
+
+
+/* ----------------- HEADER RIGHT -----------------*/
 header #header-right{
-    float:left;
-    widht:600px;
+    float:right; /* alignment of the menu bar */
+    width:600px;
+    margin-right:20px;
 }
 
 header #header-right ul{
@@ -35,13 +46,57 @@ header #header-right ul li{
 }
 
 header #header-right ul li a{
-    padding: 32px 15px 25px 37px;
+    padding: 32px 0px 25px 50px;
     text-decoration:none;
     color:#000;
     font-family:open-sansregular;
+    font-size: 16px;
+    display:block;
+    line-height:30px;
 }
 
 header #header-right ul li a:hover{
     transition:ease-out 0.5s;
     color:#ff9cba;
+}
+
+
+/* ----------------- Body Content ---------------------*/
+#outer-body-bg{
+    background:url(../images/header2-bg.png) repeat-x;
+    z-index:5;
+    height:170px;
+    position:relative;
+    margin-top: 0px;
+    padding: 30px 30px 0px 35px;
+}
+
+#outer-body-bg h1{
+    padding-right: 30px;
+    float: right;
+}
+
+#outer-body-bg #inner-body-bg {
+    background:url(../images/main-bg.jpeg) no-repeat center fixed;
+    background-size: cover;
+    z-index:6;
+    height:1200px;
+    position:relative;
+    margin: 40px 30px 0px 30px;
+}
+
+#search-bar-wrapper{
+    overflow: hidden;
+    text-align:center;
+}
+
+#search-bar-wrapper .search-bar{
+    margin: 50px 20px 20px 20px;
+    text-align: center;
+    width:80%;
+    border: 5;
+    height: 36px;
+    padding: 0px 0px 0px 15px;
+    outline: 1;
+    border-radius: 18px;
 }
