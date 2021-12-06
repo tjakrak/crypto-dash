@@ -9,14 +9,16 @@ public class ClientInfo implements Serializable {
 
     private String name;
     private String email;
+    private String uniqueId;
 
     /**
      * Constructor
      * @param name
      */
-    public ClientInfo(String name, String email) {
+    public ClientInfo(String name, String email, String userId, String teamId) {
         this.name = name;
         this.email = email;
+        this.uniqueId = userId + teamId;
     }
 
     /**

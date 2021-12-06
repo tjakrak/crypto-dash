@@ -35,4 +35,6 @@ public class LoginServerConstants {
     // list of constants that matches with slack response json body
     public static final String NAME_KEY = "name";
     public static final String EMAIL = "email";
+    public static final String USER_ID = "https://slack.com/user_id";
+    public static final String TEAM_ID = "https://slack.com/team_id";
 }

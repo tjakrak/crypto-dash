@@ -1,53 +1,53 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-<head>
-    <link href="../static/styles/style.css" th:href="@{styles/style.css}" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
-    <meta charset="UTF-8">
-    <title>Tickets Purchase</title>
-</head>
+    <head>
+        <link href="../static/styles/style.css" th:href="@{styles/style.css}" rel="stylesheet" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+        <meta charset="UTF-8">
+        <title>Tickets Purchase</title>
+    </head>
 
-<body>
-    <div id="header-wrapper">
-        <header>
-            <div id="header-left">
-                <!--upload logo to the page-->
-                <a href="/"><img src="../static/images/eventbase.png" width="150" th:src="@{images/eventbase.png}" /></a>
-            </div>
-            <div id="header-right">
-                <!--menu bar-->
-                <ul>
-                    <li><a href="/">create an event</a></li>
-                    <li><a href="/">my tickets</a></li>
-                    <li><a href="/logout">logout</a></li>
-                    <li><a href="/user-settings"><i class="fas fa-user-cog"></i></a></li>
-                </ul>
-            </div>
-        </header>
-    </div>
-
-    <div id="outer-top-body-bg">
-    </div>
-    <div id="inner-body-bg">
-        <div id="wrapper-content">
-            <form action="/">
-                <div id="search-bar-wrapper">
-                    <input class="search-bar" type="text" placeholder="Search transactions..">
+    <body>
+        <div id="header-wrapper">
+            <header>
+                <div id="header-left">
+                    <!--upload logo to the page-->
+                    <a href="/"><img src="../static/images/eventbase.png" width="150" th:src="@{images/eventbase.png}" /></a>
                 </div>
-            </form>
-            <table>
-                <tr th:each="event : ${listEvents}">
-                    <td th:text = "${event.eventName}"></td>
-                </tr>
-            </table>
+                <div id="header-right">
+                    <!--menu bar-->
+                    <ul>
+                        <li><a href="/">create an event</a></li>
+                        <li><a href="/">my tickets</a></li>
+                        <li><a href="/logout">logout</a></li>
+                        <li><a href="/user-settings"><i class="fas fa-user-cog"></i></a></li>
+                    </ul>
+                </div>
+            </header>
         </div>
-    </div>
-    <div id="footer-wrapper">
-        <footer id="footer">
-            <p>Copyright 2014 &copy; Privacy Policy</p>
-        </footer>
-    </div>
+
+        <div id="outer-top-body-bg">
+        </div>
+        <div id="inner-body-bg">
+            <div id="wrapper-content">
+                <form action="/">
+                    <div id="search-bar-wrapper">
+                        <input class="search-bar" type="text" placeholder="Search transactions..">
+                    </div>
+                </form>
+                <table>
+                    <tr th:each="event : ${listEvents}">
+                        <td th:text = "${event.eventName}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div id="footer-wrapper">
+            <footer id="footer">
+                <p>Copyright 2014 &copy; Privacy Policy</p>
+            </footer>
+        </div>
 
 
-</body>
+    </body>
 </html>

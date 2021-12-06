@@ -12,6 +12,7 @@ import cs601.project4.utilities.gson.SlackConfigApi;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileNotFoundException;
@@ -25,25 +26,28 @@ public class LoginController {
     public String getLogin(Model model, HttpServletRequest req) throws FileNotFoundException {
         // retrieve the ID of this session
         String sessionId = req.getSession(true).getId();
-        System.out.println(sessionId);
 
         // determine whether the user is already authenticated
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
+        // if the user already has config_key uploaded to the session (if the user has pressed login button previously)
         Object clientConfigKeyObj = req.getSession().getAttribute(LoginServerConstants.CONFIG_KEY);
+        // check if the user try to access other pages without logging in - true = 1 - false = 0
+        String clientFailToLogin = (String) req.getSession().getAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN);
+
         if (clientInfoObj != null) { // if the user already authenticated, then go to homepage
             return "redirect:/home ";
-        } else if(clientConfigKeyObj != null) { // authenticated the user after pressing the slack login button
+        } else if(clientConfigKeyObj != null && clientFailToLogin.equals("0")) { // authenticated the user after pressing the slack login button
             Boolean verified = slackLoginVerifier(model, req, sessionId);
             if(!verified) {
                 req.getSession().invalidate();
                 return "redirect:/login";
             } else {
                 try (Connection connection = DBCPDataSource.getConnection()){
-                    String email = DataFetcherManager.getUserEmail(connection, sessionId);
-                    if (email.equals("")) {
-
-                    }
-                    System.out.println("EMAIL= " + email);
+//                    String email = DataFetcherManager.getUserEmail(connection, sessionId);
+//                    if (email.equals("")) {
+//
+//                    }
+//                    System.out.println("EMAIL= " + email);
                 } catch(SQLException e) {
                     e.printStackTrace();
                 }
@@ -68,7 +72,10 @@ public class LoginController {
             // adding the url to model so it can be read by thymeleaf html
             model.addAttribute("url", url);
 
+            // if the user try to visit other page without logging in isFail = 1, otherwise isFail = Null
             model.addAttribute("isFail", req.getSession().getAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN));
+            // reset to false
+            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "0");
 
             return "login";
         }

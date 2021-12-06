@@ -15,7 +15,7 @@ public class LogoutController {
         // check if the user is not logged in
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
         if (clientInfoObj == null) {
-            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "true");
+            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "1");
             return "redirect:/login";
         }
 

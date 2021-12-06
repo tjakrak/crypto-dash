@@ -2,6 +2,7 @@ package cs601.project4.utilities;
 
 import com.google.gson.Gson;
 //import cs601.project4.server.AppServer;
+import com.mysql.cj.log.Log;
 import cs601.project4.server.LoginServerConstants;
 import cs601.project4.utilities.gson.ClientInfo;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -131,8 +132,10 @@ public class LoginUtilities {
         // extract name from response
         String username = (String) payloadMap.get(LoginServerConstants.NAME_KEY);
         String email = (String) payloadMap.get(LoginServerConstants.EMAIL);
+        String userId = (String) payloadMap.get(LoginServerConstants.USER_ID);
+        String teamId = (String) payloadMap.get(LoginServerConstants.TEAM_ID);
 
-        return new ClientInfo(username, email);
+        return new ClientInfo(username, email, userId, teamId);
     }
 
     /**
