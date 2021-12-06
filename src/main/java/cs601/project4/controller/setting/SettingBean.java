@@ -5,6 +5,7 @@ public class SettingBean {
     private String email;
     private String zipCode;
 
+
     public String getName() {
         return name;
     }

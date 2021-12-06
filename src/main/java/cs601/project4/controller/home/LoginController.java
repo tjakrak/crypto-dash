@@ -32,22 +32,21 @@ public class LoginController {
     public String getLogin(Model model, HttpServletRequest req) throws FileNotFoundException {
         // retrieve the ID of this session
         String sessionId = req.getSession(true).getId();
-
         // determine whether the user is already authenticated
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
-        // if the user already has config_key uploaded to the session (if the user has pressed login button previously)
+        // config_key will be uploaded to the session when the user visited login page
         Object clientConfigKeyObj = req.getSession().getAttribute(LoginServerConstants.SLACK_API_CONFIG_KEY);
-        // check if the user try to access other pages without logging in - true = 1 - false = 0
+        // is_fail value is '1' if the user try to access other pages without logging in, otherwise '0'
         String clientFailToLogin = (String) req.getSession().getAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN);
 
-        if (clientInfoObj != null) { // the user already authenticated
+        if (clientInfoObj != null) {  // ---------------------------------------------- the user already authenticated
             return "redirect:/home ";
-        } else if(clientConfigKeyObj != null && clientFailToLogin.equals("0")) { // reset user session
+        } else if (clientConfigKeyObj != null && clientFailToLogin.equals("0")) { // -- reset user session
             Boolean verified = slackLoginVerifier(req, sessionId);
-            if(!verified) { // if the authentication fail
+            if(!verified) {           // ---------------------------------------------- fail to authenticate user
                 req.getSession().invalidate();
                 return "redirect:/login";
-            } else { // if the user login successfully
+            } else {                  // ---------------------------------------------- user login successfully
                 try (Connection connection = DBCPDataSource.getConnection()){
 //                    String email = DataFetcherManager.getUserEmail(connection, sessionId);
 //                    if (email.equals("")) {
@@ -77,7 +76,7 @@ public class LoginController {
         String slackConfigText = (String) req.getSession().getAttribute(LoginServerConstants.SLACK_API_CONFIG_KEY);
         SlackConfig slackConfig = gson.fromJson(slackConfigText, SlackConfig.class);
 
-        // getting the "code" parameter from the SLACK API response
+        // getting the "code" parameter from the Slack API response
         String code = req.getParameter(LoginServerConstants.CODE_KEY);
         // generate string url for slack authentication
         String url = LoginUtilities.generateSlackTokenURL(
@@ -86,20 +85,18 @@ public class LoginController {
                 code,
                 slackConfig.getRedirect_url());
 
-        // send get response to slack with the url generated above
+        // send get response to slack with the previously generated url
         String responseString = HTTPFetcher.doGet(url, null);
 
         // get the slack json response and put it to hashmap as key and value
         Map<String, Object> response = LoginUtilities.jsonStrToMap(responseString);
 
-        // verifying the response from slack API
+        // verifying the response from Slack API
         ClientInfo clientInfo = LoginUtilities.verifyTokenResponse(response, sessionId);
 
-        // if the user is not verified
-        if(clientInfo == null) {
+        if(clientInfo == null) {    // --- if the user is not verified
             return false;
-            // if the user is verified
-        } else {
+        } else {                    // --- if the user is verified
             req.getSession().setAttribute(LoginServerConstants.CLIENT_INFO_KEY, new Gson().toJson(clientInfo));
             return true;
         }
