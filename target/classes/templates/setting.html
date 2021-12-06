@@ -1,31 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-<head>
-    <!--bootstrap to be able to call icon image-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
-    <meta charset="UTF-8">
-    <title>User Setting</title>
-</head>
-<body>
+    <head>
+        <!--bootstrap to be able to call icon image-->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+        <meta charset="UTF-8">
+        <title>User Setting</title>
+    </head>
+    <body>
+        <!--action - calling http POST method to /user-settings-->
+        <!--th:object - calling an object that is stored in model attribute, in this case the object is SettingBean-->
+        <form th:action="@{/user-settings}" th:object="${settingBean}" method="post">
+            <ul>
+                <!--th:value - mapped from setting controller mode attribute-->
+                <!--name - has to be the same as variable in SettingBean-->
+                <li><label> Name </label> <input type="text" id="name" name="name" th:value="${currName}" /></li>
+                <li><label> Email </label> <input type="text" id="email" name="email" th:value="${currEmail}" /></li>
+                <li><label> Zip Code </label> <input type="text" id="zipCode" name="zipCode" th:value="${zipCode}" /></li>
+            </ul>
+            <button type="submit">Submit</button>
+        </form>
 
-    <!--action - calling http POST method to /user-settings-->
-    <!--th:object - calling an object that is stored in model attribute, in this case the object is SettingBean-->
-    <form th:action="@{/user-settings}" th:object="${settingBean}" method="post">
-        <ul>
-            <!--th:value - mapped from setting controller mode attribute-->
-            <!--name - has to be the same as variable in SettingBean-->
-            <li><label> Name </label> <input type="text" id="name" name="name" th:value="${currName}" /></li>
-            <li><label> Email </label> <input type="text" id="email" name="email" th:value="${currEmail}" /></li>
-            <li><label> Zip Code </label> <input type="text" id="zipCode" name="zipCode" th:value="${zipCode}" /></li>
-        </ul>
-        <button type="submit">Submit</button>
-    </form>
-
-    <form action="/">
-        <!--class - calling button image with code "fas fa-user-cog" from the fontawesome bootstrap-->
-        <button class="btn"><i class="fas fa-user-cog"></i></button>
-    </form>
-
-
-</body>
+        <form action="/">
+            <!--class - calling button image with code "fas fa-user-cog" from the fontawesome bootstrap-->
+            <button class="btn"><i class="fas fa-user-cog"></i></button>
+        </form>
+    </body>
 </html>

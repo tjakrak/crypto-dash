@@ -23,7 +23,7 @@ public class LoginServerConstants {
 
 
     // constants to act as a key to be stored in our server session attribute
-    public static final String CONFIG_KEY = "config_key";
+    public static final String SLACK_API_CONFIG_KEY = "config_key";
     public static final String CLIENT_INFO_KEY = "client_info_key";
     public static final String IS_FAIL_TO_LOGIN = "fail_to_login";
 

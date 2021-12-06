@@ -2,7 +2,7 @@ package cs601.project4.server;
 
 import com.google.gson.Gson;
 import cs601.project4.utilities.gson.DbConfig;
-import cs601.project4.utilities.gson.SlackConfigApi;
+import cs601.project4.utilities.gson.SlackConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -21,11 +21,11 @@ public class NoStayHomeAppServer {
         app.run(args);
     }
 
-    public static SlackConfigApi readSlackAuthConfig() {
-        SlackConfigApi config = null;
+    public static SlackConfig readSlackAuthConfig() {
+        SlackConfig config = null;
         Gson gson = new Gson();
         try {
-            config = gson.fromJson(new FileReader(slackConfigFileName), SlackConfigApi.class);
+            config = gson.fromJson(new FileReader(slackConfigFileName), SlackConfig.class);
         } catch (FileNotFoundException e) {
             System.err.println("Config file config.json not found: " + e.getMessage());
         }

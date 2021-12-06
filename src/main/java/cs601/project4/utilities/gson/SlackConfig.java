@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * A class parse necessary configuration info.
  */
-public class SlackConfigApi implements Serializable {
+public class SlackConfig implements Serializable {
 
     // These variable names violate Java style guidelines
     // in order to be consistent with the naming conventions
@@ -14,7 +14,7 @@ public class SlackConfigApi implements Serializable {
     private String client_id;
     private String client_secret;
 
-    public SlackConfigApi(String redirect_uri, String client_id, String client_secret) {
+    public SlackConfig(String redirect_uri, String client_id, String client_secret) {
         this.redirect_uri = redirect_uri;
         this.client_id = client_id;
         this.client_secret = client_secret;

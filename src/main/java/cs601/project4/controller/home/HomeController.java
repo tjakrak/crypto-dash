@@ -17,6 +17,12 @@ import java.util.List;
 @Controller
 public class HomeController {
 
+    /**
+     * a method to handle GET home request
+     *
+     * @param model     a holder for model attributes and is primarily designed for adding attributes to the model
+     * @param req       servletRequest contains: session id, attribute, and other information from slack response
+     */
     @GetMapping("/home")
     public String getHome(Model model, HttpServletRequest req) {
 //        System.out.println("HOME SESSION: "+ req.getSession().getId());
