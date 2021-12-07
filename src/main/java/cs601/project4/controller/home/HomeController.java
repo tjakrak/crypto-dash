@@ -37,16 +37,13 @@ public class HomeController {
 
         List<Event> eventList = new ArrayList<>();
         Event e1 = new Event();
-        e1.setEventName("haha");
-
+        e1.setEventName("Coding Party");
         Event e2 = new Event();
-        e2.setEventName("bbbbb");
-
+        e2.setEventName("Marisa's Birthday");
         eventList.add(e1);
         eventList.add(e2);
 
         model.addAttribute("listEvents", eventList);
-
         model.addAttribute("name", clientInfo.getName());
 
         return "home";

@@ -3,6 +3,7 @@ package cs601.project4.controller.home;
 import com.google.gson.Gson;
 import cs601.project4.database.DBCPDataSource;
 import cs601.project4.database.DataFetcherManager;
+import cs601.project4.database.DataInsertionManager;
 import cs601.project4.server.LoginServerConstants;
 import cs601.project4.server.NoStayHomeAppServer;
 import cs601.project4.utilities.HTTPFetcher;
@@ -48,11 +49,18 @@ public class LoginController {
                 return "redirect:/login";
             } else {                  // ---------------------------------------------- user login successfully
                 try (Connection connection = DBCPDataSource.getConnection()){
-//                    String email = DataFetcherManager.getUserEmail(connection, sessionId);
-//                    if (email.equals("")) {
-//
-//                    }
-//                    System.out.println("EMAIL= " + email);
+                    Gson gson = new Gson();
+                    clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
+                    ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
+                    String userId = clientInfo.getUniqueId();
+                    boolean isUserIdExist = DataFetcherManager.isUserIdExist(connection, userId);
+                    if (!isUserIdExist) {
+                        String name = clientInfo.getName();
+                        String email = clientInfo.getEmail();
+                        String zipcode = "";
+                        DataInsertionManager.insertToUser(connection, userId, name, email, zipcode);
+                        DataInsertionManager.insertToUserToSession(connection, userId, sessionId);
+                    }
                 } catch(SQLException e) {
                     e.printStackTrace();
                 }

@@ -10,18 +10,21 @@ import java.util.List;
 
 public class DataFetcherManager {
 
-    public static String getUserEmail(Connection con, String sessionId) throws SQLException {
-        String selectEmailSql = "SELECT u_s.email FROM user_session u_s JOIN SPRING_SESSION S_S ON " +
-                "u_s.session_id = S_S.SESSION_ID WHERE S_S.SESSION_ID = '" + sessionId + "';";
+    public static Boolean isUserIdExist(Connection con, String userId) throws SQLException {
+        String selectEmailSql = "SELECT user_id FROM user WHERE user_id = '" + userId + "';";
         PreparedStatement selectEmailStmt = con.prepareStatement(selectEmailSql);
         ResultSet results = selectEmailStmt.executeQuery();
 
-        String email = "";
+        String duplicateUserId = "";
         if (results.next()) {
-            email = results.getString("email");
-            return email;
+            duplicateUserId = results.getString("user_id");
         }
-        return email;
+
+        if (duplicateUserId == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 

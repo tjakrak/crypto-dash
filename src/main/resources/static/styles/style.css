@@ -46,7 +46,7 @@ header #header-right ul li{
 }
 
 header #header-right ul li a{
-    padding: 32px 0px 25px 50px;
+    padding: 30px 0px 25px 50px;
     text-decoration:none;
     color:#000;
     font-family:open-sansregular;
@@ -82,12 +82,12 @@ header #header-right ul li a:hover{
     z-index:6;
     min-height:1200px;
     position: relative;
-    margin: -130px 30px 0px 30px;
+    margin: -130px 60px 0px 60px;
 }
 
 #search-bar-wrapper{
     overflow: hidden;
-    text-align:center;
+    text-align: center;
 }
 
 #search-bar-wrapper .search-bar{
@@ -100,6 +100,29 @@ header #header-right ul li a:hover{
     outline: 1;
     border-radius: 18px;
 }
+
+#event-list-content-wrapper{
+    margin-top: 20px;
+}
+
+#event-table{
+    text-align: center;
+    background-color: #F5EC7C;
+    opacity: 80%;
+    border-radius: 18px;
+    width: 50%;
+    alignment: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 15px;
+    padding: 10px 20px 10px 20px;
+}
+
+#event-table td:hover {
+    text-align: center;
+    background-color: #FFFF;
+}
+
 
 
 /* ------------------- Footer ----------------------*/

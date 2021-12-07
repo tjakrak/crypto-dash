@@ -30,21 +30,31 @@
         </div>
         <div id="inner-body-bg">
             <div id="wrapper-content">
+                <!--search bar here-->
                 <form action="/">
                     <div id="search-bar-wrapper">
                         <input class="search-bar" type="text" placeholder="Search events..">
                     </div>
                 </form>
-                <table>
-                    <tr th:each="event : ${listEvents}">
-                        <td th:text = "${event.eventName}"></td>
-                    </tr>
-                </table>
+                <!--list of events here-->
+                <div id="event-list-content-wrapper">
+                    <table id = "event-table" th:each="event : ${listEvents}">
+<!--                        <tr>-->
+<!--                            <th>Marisa's birthday</th>-->
+<!--                            <td>buy ticket</td>-->
+<!--                        </tr>-->
+                        <tr>
+                            <th th:text = "${event.eventName}"></th>
+                            <td th:text = "${}" />
+                            <td> buy ticket </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
         <div id="footer-wrapper">
             <footer id="footer">
-                <p>Copyright 2014 &copy; Privacy Policy</p>
+                <p>Copyright 2021 &copy; Privacy Policy</p>
             </footer>
         </div>
     </body>

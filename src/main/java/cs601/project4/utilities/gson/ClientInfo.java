@@ -41,6 +41,13 @@ public class ClientInfo implements Serializable {
         this.email = email;
     }
 
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 
     @Override
     public String toString() {

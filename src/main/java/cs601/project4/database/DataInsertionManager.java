@@ -10,14 +10,16 @@ import java.util.List;
 
 public class DataInsertionManager {
 
-    public static void insertToUser(Connection con, String name, String email, String zipcode, Timestamp startdate) throws SQLException {
-        String insertUserSql = "INSERT INTO user (name, email, zipcode, created_at) VALUES (?, ?, ?, ?);";
+    public static void insertToUser(Connection con, String userId, String name, String email, String zipcode) throws SQLException {
+        String insertUserSql = "INSERT INTO user (user_id, name, email, zipcode, created_at) VALUES (?, ?, ?, ?, ?);";
         PreparedStatement insertUserStmt = con.prepareStatement(insertUserSql);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         // check if names contains other than alpha numeric
-        insertUserStmt.setString(1, name);
-        insertUserStmt.setString(2, email);
-        insertUserStmt.setString(3, zipcode);
-        insertUserStmt.setTimestamp(4, startdate);
+        insertUserStmt.setString(1, userId);
+        insertUserStmt.setString(2, name);
+        insertUserStmt.setString(3, email);
+        insertUserStmt.setString(4, zipcode);
+        insertUserStmt.setTimestamp(5, timestamp);
         insertUserStmt.executeUpdate();
     }
 
@@ -48,10 +50,10 @@ public class DataInsertionManager {
         insertEventStmt.executeUpdate();
     }
 
-    public static void insertToUserToSession(Connection con, int userId, String sessionId) throws SQLException {
+    public static void insertToUserToSession(Connection con, String userId, String sessionId) throws SQLException {
         String insertUserToSessionSql = "INSERT INTO user_session (user_id, session_id) VALUES (?, ?);";
         PreparedStatement insertUserToSessionStmt = con.prepareStatement(insertUserToSessionSql);
-        insertUserToSessionStmt.setInt(1, userId);
+        insertUserToSessionStmt.setString(1, userId);
         insertUserToSessionStmt.setString(2, sessionId);
         insertUserToSessionStmt.executeUpdate();
     }
