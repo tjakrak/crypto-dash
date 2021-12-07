@@ -10,6 +10,11 @@ public class ClientInfo implements Serializable {
     private String name;
     private String email;
     private String uniqueId;
+    private String zipcode;
+
+    public ClientInfo() {
+        this("", "", "", "");
+    }
 
     /**
      * Constructor
@@ -19,6 +24,7 @@ public class ClientInfo implements Serializable {
         this.name = name;
         this.email = email;
         this.uniqueId = userId + teamId;
+        this.zipcode = "";
     }
 
     /**
@@ -47,6 +53,14 @@ public class ClientInfo implements Serializable {
 
     public void setUniqueId(String uniqueId) {
         this.uniqueId = uniqueId;
+    }
+
+    public String getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 
     @Override

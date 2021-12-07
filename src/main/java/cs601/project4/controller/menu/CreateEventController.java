@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.http.HttpServletRequest;
 
 public class CreateEventController {
-    @PostMapping("/event")
+    @GetMapping("/event/create")
     public String postEvent(Model model, HttpServletRequest req) {
         return "event";
     }

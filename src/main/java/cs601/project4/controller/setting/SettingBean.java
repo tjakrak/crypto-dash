@@ -3,7 +3,7 @@ package cs601.project4.controller.setting;
 public class SettingBean {
     private String name;
     private String email;
-    private String zipCode;
+    private String zipcode;
 
 
     public String getName() {
@@ -22,11 +22,11 @@ public class SettingBean {
         this.email = email;
     }
 
-    public String getZipCode() {
-        return zipCode;
+    public String getZipcode() {
+        return zipcode;
     }
 
-    public void setZipCode(String zipCode) {
-        this.zipCode = zipCode;
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 }

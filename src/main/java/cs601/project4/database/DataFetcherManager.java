@@ -1,5 +1,6 @@
 package cs601.project4.database;
 
+import cs601.project4.utilities.gson.ClientInfo;
 import cs601.project4.utilities.gson.Event;
 
 import java.sql.Connection;
@@ -25,6 +26,22 @@ public class DataFetcherManager {
         } else {
             return true;
         }
+    }
+
+    public static ClientInfo getClientInfo(Connection con, String userId) throws SQLException {
+        String selectEmailSql = "SELECT * FROM user WHERE user_id = '" + userId + "';";
+        PreparedStatement selectEmailStmt = con.prepareStatement(selectEmailSql);
+        ResultSet results = selectEmailStmt.executeQuery();
+
+        ClientInfo clientInfo = new ClientInfo();
+
+        if (results.next()) {
+            clientInfo.setName(results.getString("name"));
+            clientInfo.setEmail(results.getString("email"));
+            clientInfo.setZipcode(results.getString("zipcode"));
+        }
+
+        return clientInfo;
     }
 
 
