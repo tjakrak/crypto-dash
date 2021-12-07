@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="https://www.thymeleaf.org">
 <head>
+    <!--bootstrap to be able to call icon image-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Create Event</title>
 </head>
 <body>
+<!--action - calling http POST method to /user-settings-->
+<!--th:object - calling an object that is stored in model attribute, in this case the object is SettingBean-->
+<form th:action="@{/event/create}" method="post">
+    <ul>
+        <!--th:value - mapped from setting controller mode attribute-->
+        <!--name - has to be the same as variable in SettingBean-->
+        <li><label> Event Name </label> <input type="text" id="event-name" name="event-name" th:value="${eventName}" /></li>
+        <li><label> Start Date </label> <input type="datetime" id="start-date" name="start-date" th:value="${startDate}" /></li>
+        <li><label> End Date </label> <input type="datetime" id="end-date" name="end-date" th:value="${endDate}" /></li>
+        <li><label> Ticket Price </label> <input type="number" step="0.01" id="ticket-price" name="ticketPrice" th:value="${ticketPrice}" /></li>
+        <li><label> Description </label> <input type="text" id="description" name="description" th:value="${description}" /></li>
 
+    </ul>
+    <button type="submit">Submit</button>
+</form>
+
+<form action="/home">
+    <!--class - calling button image with code "fas fa-user-cog" from the fontawesome bootstrap-->
+    <button class="btn"><i class="fas fa-home"></i></button>
+</form>
 </body>
 </html>

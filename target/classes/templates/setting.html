@@ -13,16 +13,16 @@
             <ul>
                 <!--th:value - mapped from setting controller mode attribute-->
                 <!--name - has to be the same as variable in SettingBean-->
-                <li><label> Name </label> <input type="text" id="name" name="name" th:value="${currName}" /></li>
+                <li><label> Name </label> </li>
                 <li><label> Email </label> <input type="text" id="email" name="email" th:value="${currEmail}" /></li>
-                <li><label> Zip Code </label> <input type="text" id="zipCode" name="zipCode" th:value="${zipCode}" /></li>
+                <li><label> Zip Code </label> <input type="text" id="zipcode" name="zipcode" th:value="${currZipcode}" /></li>
             </ul>
             <button type="submit">Submit</button>
         </form>
 
-        <form action="/">
+        <form action="/home">
             <!--class - calling button image with code "fas fa-user-cog" from the fontawesome bootstrap-->
-            <button class="btn"><i class="fas fa-user-cog"></i></button>
+            <button class="btn"><i class="fas fa-home"></i></button>
         </form>
     </body>
 </html>
