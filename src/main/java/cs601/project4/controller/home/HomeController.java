@@ -34,8 +34,9 @@ public class HomeController {
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
         ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
 
-        if (clientInfoObj == null) {
-            return "redirect:/login ";
+        if (clientInfo == null) { // if the user hasn't logged in to the app
+            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "1");
+            return "redirect:/login";
         }
 
         try (Connection connection = DBCPDataSource.getConnection()){

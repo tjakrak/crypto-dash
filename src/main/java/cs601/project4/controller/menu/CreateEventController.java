@@ -23,18 +23,27 @@ import java.util.Date;
 public class CreateEventController {
 
     @GetMapping("/event/create")
-    public String getCreateEvent(Model model) {
+    public String getCreateEvent(Model model, HttpServletRequest req) {
+
+        Gson gson = new Gson();
+        Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
+
+        if (clientInfoObj == null) { // if the user hasn't logged in to the app
+            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "1");
+            return "redirect:/login ";
+        }
 
         String currTime = getCurrTimeInString();
-        System.out.println(currTime);
-        model.addAttribute("eventName", "coding bootcamp");
+
         model.addAttribute("startDate", currTime);
         model.addAttribute("endDate", currTime);
-        model.addAttribute("ticketPrice", 20);
-        model.addAttribute("description", "coding bootcamp special");
+        model.addAttribute("ticketPrice", 0);
+        model.addAttribute("ticketTotal", 0);
+        model.addAttribute("description", "");
 
         return "create-event";
     }
+
 
     /**
      * a POST method to parse data from the user input and store it in MySql database
@@ -44,7 +53,12 @@ public class CreateEventController {
             @RequestParam("event-name") String eventName,
             @RequestParam("start-date") String startDate,
             @RequestParam("end-date") String endDate,
-//            @RequestParam("ticket-price") Double ticketPrice,
+            @RequestParam("ticket-price") String ticketPriceStr,
+            @RequestParam("ticket-total") String ticketTotalStr,
+            @RequestParam("address") String address,
+            @RequestParam("city") String city,
+            @RequestParam("state") String state,
+            @RequestParam("zipcode") String zipcode,
             @RequestParam("description") String description,
             HttpServletRequest req) {
 
@@ -52,18 +66,33 @@ public class CreateEventController {
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
         ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
 
+        if (clientInfoObj == null) { // if the user hasn't logged in to the app
+            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "1");
+            return "redirect:/login";
+        }
+
+        String response = validateInput(eventName, address, city, state, zipcode);
         String userId = clientInfo.getUniqueId();
+
+        if (response != null) { // if there is one or more field empty
+            return "redirect:/login";
+        }
 
         try {
             Timestamp startTimeStamp = dbDateFormatter(startDate);
             Timestamp endTimeStamp = dbDateFormatter(endDate);
-//            try (Connection connection = DBCPDataSource.getConnection()){
-//                DataInsertionManager.insertToEvent(connection, eventName, startTimeStamp, endTimeStamp, description,
-//                        0, 0, 0, 0, userId, "", "", "",
-//                        "");
-//            } catch(SQLException e) {
-//                e.printStackTrace();
-//            }
+            double ticketPrice = Double.parseDouble(ticketPriceStr);
+            int ticketTotal = Integer.parseInt(ticketTotalStr);
+
+            try (Connection connection = DBCPDataSource.getConnection()){
+                DataInsertionManager.insertToEvent(
+                        connection, eventName, startTimeStamp, endTimeStamp,
+                        description, ticketPrice, ticketTotal, 0,
+                        ticketTotal, userId, address, city, state, zipcode
+                );
+            } catch(SQLException e) {
+                e.printStackTrace();
+            }
         } catch (Exception e){
             System.out.println(e);
         }
@@ -75,6 +104,7 @@ public class CreateEventController {
         return "create-event";
     }
 
+
     /**
      * a helper method to get current date in Timestamp and format the date to a String
      * with proper format to be compatible with HTML datetime-local format.
@@ -82,6 +112,7 @@ public class CreateEventController {
      *          "2021-12-12 10:30:00" to "2021-12-12T10:30"
      */
     private String getCurrTimeInString() {
+
         Timestamp currTime = new Timestamp(System.currentTimeMillis());
         String currTimeStr = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(currTime);
         StringBuilder newTimeFormat = new StringBuilder(currTimeStr);
@@ -92,6 +123,7 @@ public class CreateEventController {
         return newTimeFormat.toString();
     }
 
+
     /**
      * a helper method to convert a date in String to a date in Timestamp
      * with proper format to be compatible with MySql database format.
@@ -101,6 +133,7 @@ public class CreateEventController {
      * @param date date string type
      */
     private Timestamp dbDateFormatter(String date) throws ParseException {
+
         StringBuilder dateNewFormat = new StringBuilder(date);
         dateNewFormat.setCharAt(10, ' ');
         dateNewFormat.append(":00");
@@ -112,7 +145,13 @@ public class CreateEventController {
         return timestamp;
     }
 
-    private String validateInput() {
+    private String validateInput(String eventName, String address, String city,
+                                 String state, String zipcode) {
+
+        if (eventName == null || address == null || city == null || state == null || zipcode == null) {
+            return "one or more fields is empty";
+        }
+
         return null;
     }
 }

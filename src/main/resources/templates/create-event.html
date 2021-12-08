@@ -16,7 +16,9 @@
         <li><label> Event Name </label> <input type="text" id="event-name" name="event-name" th:value="${eventName}" /></li>
         <li><label> Start Date </label> <input type="datetime-local" th:min="${startDate}" id="start-date" name="start-date" th:value="${startDate}" /></li>
         <li><label> End Date </label> <input type="datetime-local" th:min="${endDate}" id="end-date" name="end-date" th:value="${endDate}" /></li>
-        <li><label> Ticket Price </label> <input type="number" step="0.01" id="ticket-price" name="ticketPrice" th:value="${ticketPrice}" /></li>
+        <li><label> Ticket Price </label> <input type="number" step="0.01" id="ticket-price" name="ticket-price" th:value="${ticketPrice}" /></li>
+        <li><label> Number of Tickets </label> <input type="number" id="ticket-total" name="ticket-total" th:value="${ticketTotal}" /></li>
+
         <li><label> Description </label> <input type="text" id="description" name="description" th:value="${description}" /></li>
 
     </ul>

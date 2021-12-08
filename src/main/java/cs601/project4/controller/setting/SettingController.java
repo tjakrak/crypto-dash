@@ -24,6 +24,12 @@ public class SettingController {
     @GetMapping("/user-settings")
     public String getUserSetting(Model model, HttpServletRequest req) {
         ClientInfo clientInfo = getClientInfo(req);
+
+        if (clientInfo == null) { // if the user hasn't logged in to the app
+            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "1");
+            return "redirect:/login ";
+        }
+
         String userId = clientInfo.getUniqueId();
 
         try (Connection connection = DBCPDataSource.getConnection()){
@@ -71,12 +77,9 @@ public class SettingController {
         }
     }
 
+    // move this to other method
     public ClientInfo getClientInfo(HttpServletRequest req) {
         return gson.fromJson((String) req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY), ClientInfo.class);
     }
-
-
-
-
 
 }
