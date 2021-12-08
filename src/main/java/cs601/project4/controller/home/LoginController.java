@@ -48,27 +48,37 @@ public class LoginController {
                 req.getSession().invalidate();
                 return "redirect:/login";
             } else {                  // ---------------------------------------------- user login successfully
-                try (Connection connection = DBCPDataSource.getConnection()){
-                    Gson gson = new Gson();
-                    clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
-                    ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
-                    String userId = clientInfo.getUniqueId();
-                    boolean isUserIdExist = DataFetcherManager.isUserIdExist(connection, userId);
-                    if (!isUserIdExist) {
-                        String name = clientInfo.getName();
-                        String email = clientInfo.getEmail();
-                        String zipcode = "";
-                        DataInsertionManager.insertToUser(connection, userId, name, email, zipcode);
-                        DataInsertionManager.insertToUserToSession(connection, userId, sessionId);
-                    }
-                } catch(SQLException e) {
-                    e.printStackTrace();
-                }
+                clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
+                addNewUserToDb(sessionId, clientInfoObj);
                 return "redirect:/home";
             }
         } else { // the user just visited login page for the first time
             slackLoginPreparer(model, req, sessionId);
             return "login";
+        }
+    }
+
+    /**
+     * A helper wrapper method to help verify the login through slack
+     *
+     * @param sessionId     current session id
+     * @param clientInfoObj obj that store various client information
+     */
+    private void addNewUserToDb(String sessionId, Object clientInfoObj) {
+        try (Connection connection = DBCPDataSource.getConnection()){
+            Gson gson = new Gson();
+            ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
+            String userId = clientInfo.getUniqueId();
+            boolean isUserIdExist = DataFetcherManager.isUserIdExist(connection, userId);
+            if (!isUserIdExist) {
+                String name = clientInfo.getName();
+                String email = clientInfo.getEmail();
+                String zipcode = "";
+                DataInsertionManager.insertToUser(connection, userId, name, email, zipcode);
+                DataInsertionManager.insertToUserToSession(connection, userId, sessionId);
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -81,8 +91,8 @@ public class LoginController {
     private Boolean slackLoginVerifier(HttpServletRequest req, String sessionId) {
         // retrieve the config info from the session attribute and convert it to Config object
         Gson gson = new Gson();
-        String slackConfigText = (String) req.getSession().getAttribute(LoginServerConstants.SLACK_API_CONFIG_KEY);
-        SlackConfig slackConfig = gson.fromJson(slackConfigText, SlackConfig.class);
+        Object slackConfigObj = req.getSession().getAttribute(LoginServerConstants.SLACK_API_CONFIG_KEY);
+        SlackConfig slackConfig = gson.fromJson((String) slackConfigObj, SlackConfig.class);
 
         // getting the "code" parameter from the Slack API response
         String code = req.getParameter(LoginServerConstants.CODE_KEY);

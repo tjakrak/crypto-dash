@@ -9,8 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class LogoutController {
+
+    /**
+     * a method to handle GET logout request
+     *
+     * @param req servletRequest contains that contains sessionId and its attributes
+     */
     @GetMapping("/logout")
-    public String logout(Model model, HttpServletRequest req) {
+    public String logout(HttpServletRequest req) {
 
         // check if the user is not logged in
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);

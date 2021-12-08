@@ -122,7 +122,7 @@ public class LoginUtilities {
         String idToken = (String)map.get("id_token");
         Map<String, Object> payloadMap = decodeIdTokenPayload(idToken);
 
-        //verify nonce
+        // verify nonce
         String expectedNonce = generateNonce(sessionId);
         String actualNonce = (String) payloadMap.get(LoginServerConstants.NONCE_KEY);
         if(!expectedNonce.equals(actualNonce)) {
@@ -162,4 +162,6 @@ public class LoginUtilities {
         Map<String, Object> payloadMap = gson.fromJson(new StringReader(payload), Map.class);
         return payloadMap;
     }
+
+
 }

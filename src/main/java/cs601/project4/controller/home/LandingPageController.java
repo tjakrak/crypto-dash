@@ -11,8 +11,14 @@ import java.io.IOException;
 
 @Controller
 public class LandingPageController {
+
+    /**
+     * a method to handle GET landing page request
+     *
+     * @param req servletRequest contains: session id, attribute, and other information from slack response
+     */
     @GetMapping("/")
-    public String getLanding(Model model, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    public String getLanding(HttpServletRequest req) throws IOException {
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
         if (clientInfoObj != null) {
             return "redirect:/home";

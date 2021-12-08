@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DataFetcherManager {
@@ -49,13 +50,18 @@ public class DataFetcherManager {
         String selectAllContactsSql = "SELECT * FROM event;";
         PreparedStatement selectAllEventsStmt = con.prepareStatement(selectAllContactsSql);
         ResultSet results = selectAllEventsStmt.executeQuery();
+
+        List<Event> listOfEvents = new ArrayList<>();
         while(results.next()) {
-            System.out.printf("Name: %s\n", results.getString("name"));
-            System.out.printf("Extension: %s\n", results.getInt("extension"));
-            System.out.printf("Email: %s\n", results.getString("email"));
-            System.out.printf("Start Date: %s\n", results.getString("startdate"));
+            Event event = new Event();
+            event.setEventName(results.getString("event_name"));
+            listOfEvents.add(event);
+//            System.out.printf("Name: %s\n", results.getString("name"));
+//            System.out.printf("Extension: %s\n", results.getInt("extension"));
+//            System.out.printf("Email: %s\n", results.getString("email"));
+//            System.out.printf("Start Date: %s\n", results.getString("startdate"));
         }
-        return null;
+        return listOfEvents;
     }
 
     public static List<Event> getTransactions(Connection con, String sessionId) throws SQLException {
