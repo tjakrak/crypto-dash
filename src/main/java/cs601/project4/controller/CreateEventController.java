@@ -1,4 +1,4 @@
-package cs601.project4.controller.menu;
+package cs601.project4.controller;
 
 import com.google.gson.Gson;
 import cs601.project4.database.DBCPDataSource;
@@ -91,6 +91,7 @@ public class CreateEventController {
                         description, ticketPrice, ticketTotal, 0,
                         ticketTotal, userId, address, city, state, zipcode
                 );
+
             } catch(SQLException e) {
                 e.printStackTrace();
             }
@@ -117,9 +118,9 @@ public class CreateEventController {
         Timestamp currTime = new Timestamp(System.currentTimeMillis());
         String currTimeStr = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(currTime);
         StringBuilder newTimeFormat = new StringBuilder(currTimeStr);
-        System.out.println(newTimeFormat);
+//        System.out.println(newTimeFormat);
         newTimeFormat.setCharAt(10, 'T');
-        System.out.println(newTimeFormat);
+//        System.out.println(newTimeFormat);
 
         return newTimeFormat.toString();
     }

@@ -111,11 +111,15 @@ header #header-right ul li a:hover{
     text-align: center;
     opacity: 80%;
     width: 50%;
-    alignment: center;
     margin-left: auto;
     margin-right: auto;
     margin-top: 15px;
     padding: 10px 20px 10px 20px;
+}
+
+#event-list-content-wrapper #event-list li a{
+    text-decoration:none;
+    color: #3153E6;
 }
 
 #event-list-content-wrapper #event-list #each-list-wrapper{

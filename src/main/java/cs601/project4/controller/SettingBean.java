@@ -1,4 +1,4 @@
-package cs601.project4.controller.setting;
+package cs601.project4.controller;
 
 public class SettingBean {
     private String name;

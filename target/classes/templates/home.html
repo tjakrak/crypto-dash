@@ -40,29 +40,22 @@
                 <div id="event-list-content-wrapper">
                     <ul id="event-list">
 <!--                        <li>-->
-<!--                            <div id="each-list-wrapper">-->
-<!--                                    <h1>Code Camping</h1>-->
-<!--                                    <p id="date">Sunday, December 12, 3:00PM</p>-->
-<!--                                    <p>469 W A St, Hayward, CA 94541</p>-->
-<!--                                    <p>price</p>-->
-<!--                            </div>-->
-<!--                        </li>-->
-<!--                        <li>-->
-<!--                            <div id="each-list-outer-wrapper-2">-->
-<!--                                <div id="each-list-inner-wrapper=2">-->
-<!--                                    <h1>Jocelyn's birthday</h1>-->
-<!--                                    <p>buy ticket</p>-->
+<!--                            <a href="/event">-->
+<!--                                <div id="each-list-wrapper">-->
+<!--                                        <h1>Code Camping</h1>-->
+<!--                                        <p id="date">Sunday, December 12, 3:00PM</p>-->
+<!--                                        <p>469 W A St, Hayward, CA 94541</p>-->
+<!--                                        <p>price</p>-->
 <!--                                </div>-->
-<!--                            </div>-->
+<!--                            </a>-->
 <!--                        </li>-->
-
                         <li  th:each="event : ${listEvents}">
                             <a href="/event">
                                 <div id="each-list-wrapper">
                                     <h1 th:text="${event.name}" />
                                     <p id="event-date" th:text="${event.startDate}" />
                                     <p th:text="${event.fullAddress}" />
-                                    <p th:text=$"${event.ticketPrice}" />
+                                    <p th:text="'$' + ${event.ticketPrice}" />
                                 </div>
                             </a>
                         </li>

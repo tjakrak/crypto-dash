@@ -1,4 +1,4 @@
-package cs601.project4.controller.home;
+package cs601.project4.controller;
 
 import cs601.project4.server.LoginServerConstants;
 import org.springframework.stereotype.Controller;

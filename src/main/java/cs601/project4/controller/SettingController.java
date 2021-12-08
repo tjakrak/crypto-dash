@@ -1,4 +1,4 @@
-package cs601.project4.controller.setting;
+package cs601.project4.controller;
 
 import com.google.gson.Gson;
 import cs601.project4.database.DBCPDataSource;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.SQLException;
 

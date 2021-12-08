@@ -70,7 +70,7 @@ public class DataFetcherManager {
             event.setAddress(results.getString("address"));
             event.setCity(results.getString("city"));
             event.setState(results.getString("state"));
-            event.setState(results.getString("zip_code"));
+            event.setZipCode(results.getString("zip_code"));
             event.setFullAddress();
             listOfEvents.add(event);;
         }
