@@ -27,9 +27,9 @@ public class DataInsertionManager {
                                      String description, double ticketPrice, int ticketTotal, int ticketSold,
                                      int ticketAvailable, String organizer, String address, String city,
                                      String state, String zipCode) throws SQLException {
-        String insertEventSql = "INSERT INTO event (event_name, event_start_date, event_end_date," +
-                "event_description, ticket_price, ticket_total, ticket_sold, ticket_available, organizer," +
-                "address, city, state, zip_code) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+        String insertEventSql = "INSERT INTO event (name, start_date, end_date, description, ticket_price, " +
+                "ticket_total, ticket_sold, ticket_available, organizer_id, address, city, state, zip_code) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
         PreparedStatement insertEventStmt = con.prepareStatement(insertEventSql);
         // check if names contains other than alpha numeric

@@ -3,10 +3,7 @@ package cs601.project4.database;
 import cs601.project4.utilities.gson.ClientInfo;
 import cs601.project4.utilities.gson.Event;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,20 +43,36 @@ public class DataFetcherManager {
     }
 
 
-    public static List<Event> getEvents(Connection con) throws SQLException {
+    public static List<Event> getEvents(Connection con, int size, String zipcode) throws SQLException {
+
         String selectAllContactsSql = "SELECT * FROM event;";
+        if (zipcode != null && size > 0) {
+            selectAllContactsSql = "SELECT * FROM event WHERE zipcode = '" + zipcode + "' LIMIT " + size + ";";
+        } else if (zipcode != null) {
+            selectAllContactsSql = "SELECT * FROM event WHERE zipcode = '" + zipcode + "';";
+        } else if(size > 0) {
+            selectAllContactsSql = "SELECT * FROM event LIMIT " + size + ";";
+        }
+
         PreparedStatement selectAllEventsStmt = con.prepareStatement(selectAllContactsSql);
         ResultSet results = selectAllEventsStmt.executeQuery();
 
         List<Event> listOfEvents = new ArrayList<>();
         while(results.next()) {
             Event event = new Event();
-            event.setEventName(results.getString("event_name"));
-            listOfEvents.add(event);
-//            System.out.printf("Name: %s\n", results.getString("name"));
-//            System.out.printf("Extension: %s\n", results.getInt("extension"));
-//            System.out.printf("Email: %s\n", results.getString("email"));
-//            System.out.printf("Start Date: %s\n", results.getString("startdate"));
+            event.setName(results.getString("name"));
+            event.setStartDate(results.getTimestamp("start_date"));
+            event.setDescription(results.getString("description"));
+            event.setTicketPrice(results.getInt("ticket_price"));
+            event.setTicketSold(results.getInt("ticket_sold"));
+            event.setTicketAvailable(results.getInt("ticket_available"));
+            event.setOrganizer(results.getString("organizer_id"));
+            event.setAddress(results.getString("address"));
+            event.setCity(results.getString("city"));
+            event.setState(results.getString("state"));
+            event.setState(results.getString("zip_code"));
+            event.setFullAddress();
+            listOfEvents.add(event);;
         }
         return listOfEvents;
     }

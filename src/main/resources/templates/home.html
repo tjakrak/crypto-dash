@@ -38,17 +38,45 @@
                 </form>
                 <!--list of events here-->
                 <div id="event-list-content-wrapper">
-                    <table id = "event-table" th:each="event : ${listEvents}">
-<!--                        <tr>-->
-<!--                            <th>Marisa's birthday</th>-->
-<!--                            <td>buy ticket</td>-->
-<!--                        </tr>-->
-                        <tr>
-                            <th th:text = "${event.eventName}"></th>
-<!--                            <td th:text = "${}" />-->
-                            <td> buy ticket </td>
-                        </tr>
-                    </table>
+                    <ul id="event-list">
+<!--                        <li>-->
+<!--                            <div id="each-list-wrapper">-->
+<!--                                    <h1>Code Camping</h1>-->
+<!--                                    <p id="date">Sunday, December 12, 3:00PM</p>-->
+<!--                                    <p>469 W A St, Hayward, CA 94541</p>-->
+<!--                                    <p>price</p>-->
+<!--                            </div>-->
+<!--                        </li>-->
+<!--                        <li>-->
+<!--                            <div id="each-list-outer-wrapper-2">-->
+<!--                                <div id="each-list-inner-wrapper=2">-->
+<!--                                    <h1>Jocelyn's birthday</h1>-->
+<!--                                    <p>buy ticket</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </li>-->
+
+                        <li  th:each="event : ${listEvents}">
+                            <a href="/event">
+                                <div id="each-list-wrapper">
+                                    <h1 th:text="${event.name}" />
+                                    <p id="event-date" th:text="${event.startDate}" />
+                                    <p th:text="${event.fullAddress}" />
+                                    <p th:text=$"${event.ticketPrice}" />
+                                </div>
+                            </a>
+                        </li>
+                        <div th:if = "${showMore == null}">
+                            <br />
+                        </div>
+                        <li th:if = "${showMore == 'true'}">
+                            <a href="/event">
+                                <div id="show-more-wrapper">
+                                    <h1>Show more...</h1>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

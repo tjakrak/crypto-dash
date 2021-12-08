@@ -71,16 +71,17 @@ public class CreateEventController {
             return "redirect:/login";
         }
 
-        String response = validateInput(eventName, address, city, state, zipcode);
-        String userId = clientInfo.getUniqueId();
-
-        if (response != null) { // if there is one or more field empty
-            return "redirect:/login";
-        }
-
         try {
             Timestamp startTimeStamp = dbDateFormatter(startDate);
             Timestamp endTimeStamp = dbDateFormatter(endDate);
+
+            String response = validateInput(eventName, startTimeStamp, endTimeStamp, address, city, state, zipcode);
+            String userId = clientInfo.getUniqueId();
+
+            if (response != null) { // if the user did not put the correct information
+                return "redirect:/event/create";
+            }
+
             double ticketPrice = Double.parseDouble(ticketPriceStr);
             int ticketTotal = Integer.parseInt(ticketTotalStr);
 
@@ -145,11 +146,13 @@ public class CreateEventController {
         return timestamp;
     }
 
-    private String validateInput(String eventName, String address, String city,
-                                 String state, String zipcode) {
+    private String validateInput(String eventName, Timestamp startTime, Timestamp endTime,
+                                 String address, String city, String state, String zipcode) {
 
         if (eventName == null || address == null || city == null || state == null || zipcode == null) {
-            return "one or more fields is empty";
+            return "One or more fields is empty";
+        } if (startTime.compareTo(endTime) > 0) {
+            return "End date has to be later than the start date";
         }
 
         return null;

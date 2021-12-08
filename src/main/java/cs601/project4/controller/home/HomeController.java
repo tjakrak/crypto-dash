@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -40,8 +38,11 @@ public class HomeController {
         }
 
         try (Connection connection = DBCPDataSource.getConnection()){
-            List<Event> eventList = DataFetcherManager.getEvents(connection); // get all events from db
-            model.addAttribute("listEvents", eventList);
+            List<Event> listEvents = DataFetcherManager.getEvents(connection, 5, null);
+            if (listEvents.size() > 5) {
+                model.addAttribute("showMore", "true");
+            }
+            model.addAttribute("listEvents", listEvents);
             model.addAttribute("name", clientInfo.getName());
         } catch(SQLException e) {
             e.printStackTrace();
