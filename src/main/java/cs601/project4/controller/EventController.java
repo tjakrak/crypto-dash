@@ -27,7 +27,8 @@ import java.util.List;
 public class EventController {
 
     @GetMapping("/event/{id}")
-    public String getEvent(@PathVariable(value = "id") int id, Model model, HttpServletRequest req) {
+    public String getEvent(@PathVariable(value = "id") int id,
+                           Model model, HttpServletRequest req) {
 
         Gson gson = new Gson();
         Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
@@ -51,6 +52,7 @@ public class EventController {
 
         return("event-details");
     }
+
 
     @GetMapping("/event/create")
     public String getCreateEvent(Model model, HttpServletRequest req) {

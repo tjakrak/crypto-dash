@@ -30,10 +30,10 @@
             <h1>Welcome <span th:text="${name}"></span>!</h1>
         </div>
         <div id="inner-body-bg">
-            <div id="wrapper-content" th:object="${event}" >
+            <div id="wrapper-content">
                 <!--action - calling http POST method to /user-settings-->
                 <!--th:object - calling an object that is stored in model attribute, in this case the object is event-->
-                <form th:action="@{/buy/ticket}" method="post">
+                <form th:action="@{/ticket/{id}/purchase(id=${event.eventId})}" method="post">
                     <!--value-->
                     <h1 th:text="${event.name}" />
                     <ul id="value-wrapper" th:object="${event}">
@@ -61,7 +61,7 @@
                         </li>
                     </ul>
                     <h2>How many ticket(s) would you like to get:</h2>
-                    <select name="number-of-ticket">
+                    <select name="number-of-tickets">
                         <option>Select</option>
                         <option th:each="n : ${#numbers.sequence(1, 10)}" th:value="${n}" th:text="${n}"/>
                     </select>
