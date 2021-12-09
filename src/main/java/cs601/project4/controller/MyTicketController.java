@@ -30,11 +30,6 @@ public class MyTicketController {
             return "redirect:/login";
         }
 
-        if (clientInfo == null) { // if the user hasn't logged in to the app
-            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "1");
-            return "redirect:/login";
-        }
-
 //        try (Connection connection = DBCPDataSource.getConnection()){
 //            List<Event> listEvents = DataFetcherManager.getEvents(connection, 5, null, 0);
 //            if (listEvents.size() > 5) {
@@ -52,6 +47,16 @@ public class MyTicketController {
 
     @GetMapping("/ticket/{id}")
     public String getTicket(@PathVariable (value = "id") int id, Model model, HttpServletRequest req) {
+
+        Gson gson = new Gson();
+        Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
+        ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
+
+        if (clientInfo == null) { // if the user hasn't logged in to the app
+            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "1");
+            return "redirect:/login";
+        }
+
 
         return "ticket";
     }

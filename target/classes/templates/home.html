@@ -39,16 +39,6 @@
                 <!--list of events here-->
                 <div id="event-list-content-wrapper">
                     <ul id="event-list">
-<!--                        <li>-->
-<!--                            <a href="/event">-->
-<!--                                <div id="each-list-wrapper">-->
-<!--                                        <h1>Code Camping</h1>-->
-<!--                                        <p id="date">Sunday, December 12, 3:00PM</p>-->
-<!--                                        <p>469 W A St, Hayward, CA 94541</p>-->
-<!--                                        <p>price</p>-->
-<!--                                </div>-->
-<!--                            </a>-->
-<!--                        </li>-->
                         <li  th:each="event : ${listEvents}">
                             <a th:href="@{/event/{id}(id=${event.eventId})}">
                                 <div id="each-list-wrapper">

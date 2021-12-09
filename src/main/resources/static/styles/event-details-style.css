@@ -30,6 +30,8 @@
 
 h1{
     text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 h2{
@@ -41,6 +43,13 @@ h2{
     display: block;
     margin-top: 50px;
     padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+p{
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 

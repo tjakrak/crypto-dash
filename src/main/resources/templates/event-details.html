@@ -33,10 +33,9 @@
             <div id="wrapper-content" th:object="${event}" >
                 <!--action - calling http POST method to /user-settings-->
                 <!--th:object - calling an object that is stored in model attribute, in this case the object is event-->
-        <!--        <form th:action="@{/event/create}" method="post">-->
+                <form th:action="@{/buy/ticket}" method="post">
                     <!--value-->
                     <h1 th:text="${event.name}" />
-        <!--            <h1> Ryan's Birthday </h1>-->
                     <ul id="value-wrapper" th:object="${event}">
                         <!--th:value - mapped from setting controller mode attribute-->
                         <!--name - has to be the same as variable in SettingBean-->
@@ -58,31 +57,16 @@
                         </li>
                         <li>
                             <h2>Ticket Price:</h2>
-                            <p th:text="${event.ticketPrice}"/>
+                            <p th:text="'$' + ${event.ticketPrice}"/>
                         </li>
-
-        <!--                <li>-->
-        <!--                    <h2>About This Event</h2>-->
-        <!--                    <p>ryan's birthday is awesome<p/>-->
-        <!--                </li>-->
-        <!--                    <h2>Start date:</h2>-->
-        <!--                    <p>December 12th, 2022<p/>-->
-        <!--                <li>-->
-        <!--                    <h2>End date:</h2>-->
-        <!--                    <p>December 12th, 2023<p/>-->
-        <!--                </li>-->
-        <!--                <li>-->
-        <!--                    <h2>Location:</h2>-->
-        <!--                    <p>Fremont, CA<p/>-->
-        <!--                </li>-->
-        <!--                <li>-->
-        <!--                    <h2>Ticket Price:</h2>-->
-        <!--                    <p>$230<p/>-->
-        <!--                </li>-->
-
                     </ul>
+                    <h2>How many ticket(s) would you like to get:</h2>
+                    <select name="number-of-ticket">
+                        <option>Select</option>
+                        <option th:each="n : ${#numbers.sequence(1, 10)}" th:value="${n}" th:text="${n}"/>
+                    </select>
                     <button id="button-wrapper" type="submit">Get ticket</button>
-        <!--        </form>-->
+                </form>
             </div>
         </div>
         <div id="footer-wrapper">
