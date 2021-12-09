@@ -70,6 +70,7 @@ public class LoginController {
             ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
             String userId = clientInfo.getUniqueId();
             boolean isUserIdExist = DataFetcherManager.isUserIdExist(connection, userId);
+
             if (!isUserIdExist) {
                 String name = clientInfo.getName();
                 String email = clientInfo.getEmail();

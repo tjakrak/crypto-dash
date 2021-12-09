@@ -19,7 +19,7 @@ public class DataFetcherManager {
             duplicateUserId = results.getString("user_id");
         }
 
-        if (duplicateUserId == null) {
+        if (duplicateUserId == "") {
             return false;
         } else {
             return true;

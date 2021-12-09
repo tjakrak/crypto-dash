@@ -1,64 +1,94 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
-<head>
-    <link href="../static/styles/style.css" th:href="@{styles/style.css}" rel="stylesheet" />
-    <link href="../static/styles/event-details-style.css" th:href="@{styles/event-details-style.css}" rel="stylesheet" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
-    <meta charset="UTF-8">
-    <title>Tickets Purchase</title>
-</head>
+    <head>
+        <link href="../static/styles/style.css" th:href="@{../styles/style.css}" rel="stylesheet" />
+        <link href="../static/styles/event-details-style.css" th:href="@{../styles/event-details-style.css}" rel="stylesheet" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+        <meta charset="UTF-8">
+        <title>Tickets Purchase</title>
+    </head>
 
-<body>
-<div id="header-wrapper">
-    <header>
-        <div id="header-left">
-            <!--upload logo to the page-->
-            <a href="/"><img src="../static/images/eventbase.png" width="150" th:src="@{images/eventbase.png}" /></a>
+    <body>
+        <div id="header-wrapper">
+            <header>
+                <div id="header-left">
+                    <!--upload logo to the page-->
+                    <a href="/"><img src="../static/images/eventbase.png" width="150" th:src="@{../images/eventbase.png}" /></a>
+                </div>
+                <div id="header-right">
+                    <!--menu bar-->
+                    <ul>
+                        <li><a href="/event/create">create an event</a></li>
+                        <li><a href="/">my tickets</a></li>
+                        <li><a href="/logout">logout</a></li>
+                        <li><a href="/user-settings"><i class="fas fa-user-cog"></i></a></li>
+                    </ul>
+                </div>
+            </header>
         </div>
-        <div id="header-right">
-            <!--menu bar-->
-            <ul>
-                <li><a href="/event/create">create an event</a></li>
-                <li><a href="/">my tickets</a></li>
-                <li><a href="/logout">logout</a></li>
-                <li><a href="/user-settings"><i class="fas fa-user-cog"></i></a></li>
-            </ul>
+        <div id="outer-top-body-bg">
+            <h1>Welcome <span th:text="${name}"></span>!</h1>
         </div>
-    </header>
-</div>
-<div id="outer-top-body-bg">
-    <h1>Welcome <span th:text="${name}"></span>!</h1>
-</div>
-<div id="inner-body-bg">
-    <div id="wrapper-content" th:object="${event}" >
-        <!--action - calling http POST method to /user-settings-->
-        <!--th:object - calling an object that is stored in model attribute, in this case the object is event-->
-<!--        <form th:action="@{/event/create}" method="post">-->
-            <!--value-->
-            <h1 th:text="${event.name}" />
-            <h1> Ryan's Birthday </h1>
-            <ul id="value-wrapper" th:object="${event}">
-                <!--th:value - mapped from setting controller mode attribute-->
-                <!--name - has to be the same as variable in SettingBean-->
-<!--                <li>-->
-<!--                    <h2>description:</h2>-->
-<!--                    <p th:text="${event.description}"/>-->
-<!--                </li>-->
-                <li>
-                    <h2>description:</h2>
-                    <p>ryan's birthday is awesome<p/>
+        <div id="inner-body-bg">
+            <div id="wrapper-content" th:object="${event}" >
+                <!--action - calling http POST method to /user-settings-->
+                <!--th:object - calling an object that is stored in model attribute, in this case the object is event-->
+        <!--        <form th:action="@{/event/create}" method="post">-->
+                    <!--value-->
+                    <h1 th:text="${event.name}" />
+        <!--            <h1> Ryan's Birthday </h1>-->
+                    <ul id="value-wrapper" th:object="${event}">
+                        <!--th:value - mapped from setting controller mode attribute-->
+                        <!--name - has to be the same as variable in SettingBean-->
+                        <li>
+                            <h2>About This Event:</h2>
+                            <p th:text="${event.description}"/>
+                        </li>
+                        <li>
+                            <h2>Start date:</h2>
+                            <p th:text="${event.startDate}"/>
+                        </li>
+                        <li>
+                            <h2>End date:</h2>
+                            <p th:text="${event.endDate}"/>
+                        </li>
+                        <li>
+                            <h2>Location:</h2>
+                            <p th:text="${event.fullAddress}"/>
+                        </li>
+                        <li>
+                            <h2>Ticket Price:</h2>
+                            <p th:text="${event.ticketPrice}"/>
+                        </li>
 
-                </li>
+        <!--                <li>-->
+        <!--                    <h2>About This Event</h2>-->
+        <!--                    <p>ryan's birthday is awesome<p/>-->
+        <!--                </li>-->
+        <!--                    <h2>Start date:</h2>-->
+        <!--                    <p>December 12th, 2022<p/>-->
+        <!--                <li>-->
+        <!--                    <h2>End date:</h2>-->
+        <!--                    <p>December 12th, 2023<p/>-->
+        <!--                </li>-->
+        <!--                <li>-->
+        <!--                    <h2>Location:</h2>-->
+        <!--                    <p>Fremont, CA<p/>-->
+        <!--                </li>-->
+        <!--                <li>-->
+        <!--                    <h2>Ticket Price:</h2>-->
+        <!--                    <p>$230<p/>-->
+        <!--                </li>-->
 
-            </ul>
-            <button id="button-wrapper" type="submit">Submit</button>
-<!--        </form>-->
-    </div>
-</div>
-<div id="footer-wrapper">
-    <footer id="footer">
-        <p>Copyright 2021 &copy; Privacy Policy</p>
-    </footer>
-</div>
-</body>
+                    </ul>
+                    <button id="button-wrapper" type="submit">Get ticket</button>
+        <!--        </form>-->
+            </div>
+        </div>
+        <div id="footer-wrapper">
+            <footer id="footer">
+                <p>Copyright 2021 &copy; Privacy Policy</p>
+            </footer>
+        </div>
+    </body>
 </html>
