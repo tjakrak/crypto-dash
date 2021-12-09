@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Controller
-public class CreateEventController {
+public class EventCreateController {
 
     @GetMapping("/event/create")
     public String getCreateEvent(Model model, HttpServletRequest req) {
@@ -41,7 +41,7 @@ public class CreateEventController {
         model.addAttribute("ticketTotal", 0);
         model.addAttribute("description", "");
 
-        return "create-event";
+        return "event-create";
     }
 
 
@@ -103,7 +103,7 @@ public class CreateEventController {
 //                String description, double ticketPrice, int ticketTotal, int ticketSold,
 //        int ticketAvailable, String organizer, String address, String city,
 //                String state, String zipCode) throws SQLException
-        return "create-event";
+        return "event-create";
     }
 
 

@@ -42,16 +42,20 @@ public class DataFetcherManager {
         return clientInfo;
     }
 
-
-    public static List<Event> getEvents(Connection con, int size, String zipcode) throws SQLException {
+    public static List<Event> getEvents(Connection con, int size, String zipcode, int eventId) throws SQLException {
 
         String selectAllContactsSql = "SELECT * FROM event;";
-        if (zipcode != null && size > 0) {
+        if (zipcode != null && size > 0 && eventId != 0) {
+            selectAllContactsSql = "SELECT * FROM event WHERE zipcode = '" + zipcode + "' WHERE event_id = '" +
+                    eventId + "' LIMIT " + size + ";";
+        } else if (zipcode != null && size > 0) {
             selectAllContactsSql = "SELECT * FROM event WHERE zipcode = '" + zipcode + "' LIMIT " + size + ";";
         } else if (zipcode != null) {
             selectAllContactsSql = "SELECT * FROM event WHERE zipcode = '" + zipcode + "';";
         } else if(size > 0) {
             selectAllContactsSql = "SELECT * FROM event LIMIT " + size + ";";
+        } else if (eventId != 0) {
+            selectAllContactsSql = "SELECT * FROM event WHERE event_id = " + eventId + ";";
         }
 
         PreparedStatement selectAllEventsStmt = con.prepareStatement(selectAllContactsSql);
@@ -60,6 +64,7 @@ public class DataFetcherManager {
         List<Event> listOfEvents = new ArrayList<>();
         while(results.next()) {
             Event event = new Event();
+            event.setEventId(results.getInt("event_id"));
             event.setName(results.getString("name"));
             event.setStartDate(results.getTimestamp("start_date"));
             event.setDescription(results.getString("description"));
@@ -76,6 +81,22 @@ public class DataFetcherManager {
         }
         return listOfEvents;
     }
+
+//    public static ClientInfo getTickets(Connection con, String userId) throws SQLException {
+//        String selectAllContactsSql = "SELECT * FROM transaction WHERE buyer_id = '" + userId + "';";
+//        PreparedStatement selectEmailStmt = con.prepareStatement(selectEmailSql);
+//        ResultSet results = selectEmailStmt.executeQuery();
+//
+//        ClientInfo clientInfo = new ClientInfo();
+//
+//        if (results.next()) {
+//            clientInfo.setName(results.getString("name"));
+//            clientInfo.setEmail(results.getString("email"));
+//            clientInfo.setZipcode(results.getString("zipcode"));
+//        }
+//
+//        return clientInfo;
+//    }
 
     public static List<Event> getTransactions(Connection con, String sessionId) throws SQLException {
         String selectAllContactsSql = "SELECT * FROM transaction WHERE buyer_id = " +

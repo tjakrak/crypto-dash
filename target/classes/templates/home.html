@@ -50,7 +50,7 @@
 <!--                            </a>-->
 <!--                        </li>-->
                         <li  th:each="event : ${listEvents}">
-                            <a href="/event">
+                            <a th:href="@{/event/{id}(id=${event.eventId})}">
                                 <div id="each-list-wrapper">
                                     <h1 th:text="${event.name}" />
                                     <p id="event-date" th:text="${event.startDate}" />

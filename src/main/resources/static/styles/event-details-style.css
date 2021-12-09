@@ -1,0 +1,44 @@
+#inner-body-bg{
+    background: 0;
+    z-index:6;
+    min-height:1200px;
+    max-width: 800px;
+    position: relative;
+    margin: -130px 60px 0px 60px;
+    border-style: solid;
+    margin-left: auto;
+    margin-right: auto;
+}
+#wrapper-content{
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+#value-wrapper{
+    align-text: center;
+    display: inline-block;
+    margin-top: 50px;
+}
+
+#value-wrapper li{
+    text-decoration:none;
+    list-style: none;
+    margin-top: 20px;
+}
+
+
+h {
+    text-align: center;
+}
+
+#button-wrapper{
+    position: relative;
+    display: block;
+    margin-top: 50px;
+    margin-right: 20%;
+    padding: 10px;
+}
+
+
+
