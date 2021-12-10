@@ -32,6 +32,11 @@ public class MyTicketController {
             return "redirect:/login";
         }
 
+        List<Event> listEvents = getUserEventList(clientInfo.getUniqueId());
+        if (listEvents != null) {
+            model.addAttribute("listEvents", listEvents);
+        }
+
         return "my-ticket";
     }
 

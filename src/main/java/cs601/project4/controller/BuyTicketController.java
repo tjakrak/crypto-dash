@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Controller
-public class TicketController {
+public class BuyTicketController {
 
     @PostMapping("/ticket/{id}/purchase")
     public String postTicketPurchase(@PathVariable (value = "id") int id,

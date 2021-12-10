@@ -20,7 +20,7 @@
             <!--menu bar-->
             <ul>
                 <li><a href="/event/create">create an event</a></li>
-                <li><a href="/">my tickets</a></li>
+                <li><a href="/ticket/my-ticket">my tickets</a></li>
                 <li><a href="/logout">logout</a></li>
                 <li><a href="/user/settings"><i class="fas fa-user-cog"></i></a></li>
             </ul>
@@ -32,15 +32,16 @@
 </div>
 <div id="inner-body-bg">
     <div id="wrapper-content">
-        <h1 id="main-title">Create Event</h1>
+        <h1 id="main-title">My Tickets</h1>
         <!--list of events here-->
         <div id="form-content-wrapper">
             <!--action - calling http POST method to /user-settings-->
             <!--th:object - calling an object that is stored in model attribute, in this case the object is SettingBean-->
+
             <form th:action="@{/event/create}" method="post">
                 <ul id="outer-ul">
                     <li>
-                        <ul id="inner-ul">
+                        <ul id="inner-ul-header">
                             <li>
                                 <h4>Event Name</h4>
                             </li>
@@ -56,9 +57,23 @@
                         </ul>
                     </li>
                     <hr>
-                    <li></li>
-                    <li></li>
-                    <li></li>
+                    <li th:each="event : ${listEvents}">
+                        <ul id="inner-ul">
+                            <li>
+                                <p th:text="${event.name}" />
+                            </li>
+                            <li>
+                                <p th:text="${event.organizer}" />
+                            </li>
+                            <li>
+                                <p th:text="${event.ticketCount}" />
+                            </li>
+                            <li>
+                                <p>Transfer</p>
+                            </li>
+                        </ul>
+<!--                        <a th:href="@{/event/{id}(id=${event.eventId})}"></a>-->
+                    </li>
                 </ul>
             </form>
         </div>
