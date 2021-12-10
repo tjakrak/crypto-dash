@@ -42,4 +42,13 @@ public class DataUpdaterManager {
         updateEventStmt.setInt(2, ticketAvailable);
         updateEventStmt.executeUpdate();
     }
+
+    public static void updateTicket(Connection con, int ticketId, String userId) throws SQLException {
+        String updateTicketSql = "UPDATE ticket SET user_id = ? WHERE ticket_id = " + ticketId + ";";
+
+        PreparedStatement updateEventStmt = con.prepareStatement(updateTicketSql);
+
+        updateEventStmt.setString(1, userId);
+        updateEventStmt.executeUpdate();
+    }
 }

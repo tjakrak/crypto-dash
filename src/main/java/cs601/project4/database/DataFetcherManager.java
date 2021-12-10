@@ -2,6 +2,7 @@ package cs601.project4.database;
 
 import cs601.project4.tableobject.ClientInfo;
 import cs601.project4.tableobject.Event;
+import cs601.project4.tableobject.Ticket;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -42,24 +43,35 @@ public class DataFetcherManager {
         return clientInfo;
     }
 
-    public static List<Event> getEvents(Connection con, int size, String zipcode, int eventId) throws SQLException {
+    public static List<Event> getEvents(Connection con, String organizerId, String zipcode,
+                                        int eventId, Boolean isDescending, int size) throws SQLException {
 
-        String selectAllContactsSql = "SELECT * FROM event;";
-        if (zipcode != null && size > 0 && eventId != 0) {
-            selectAllContactsSql = "SELECT * FROM event WHERE zipcode = '" + zipcode + "' WHERE event_id = '" +
-                    eventId + "' LIMIT " + size + ";";
-        } else if (zipcode != null && size > 0) {
-            selectAllContactsSql = "SELECT * FROM event WHERE zipcode = '" + zipcode + "' LIMIT " + size + ";";
+        StringBuffer selectEventSql = new StringBuffer();
+        selectEventSql.append("SELECT * FROM event");
+        //String selectEventSql = "SELECT * FROM event;";
+
+        if (zipcode != null && eventId != 0) {
+            selectEventSql.append(" WHERE zipcode = '" + zipcode + "' AND WHERE event_id = '" + eventId + "'");
         } else if (zipcode != null) {
-            selectAllContactsSql = "SELECT * FROM event WHERE zipcode = '" + zipcode + "';";
-        } else if(size > 0) {
-            selectAllContactsSql = "SELECT * FROM event LIMIT " + size + ";";
+            selectEventSql.append(" WHERE zipcode = '" + zipcode + "'");
         } else if (eventId != 0) {
-            selectAllContactsSql = "SELECT * FROM event WHERE event_id = " + eventId + ";";
+            selectEventSql.append(" WHERE event_id = " + eventId);
+        } else if (organizerId != null) {
+            selectEventSql.append(" WHERE organizer_id = " + organizerId);
         }
 
-        PreparedStatement selectAllEventsStmt = con.prepareStatement(selectAllContactsSql);
-        ResultSet results = selectAllEventsStmt.executeQuery();
+        if (isDescending) {
+            selectEventSql.append(" ORDER BY event_id DESC");
+        }
+
+        if(size > 0) {
+            selectEventSql.append(" LIMIT " + size);
+        }
+
+        selectEventSql.append(";");
+
+        PreparedStatement selectEventsStmt = con.prepareStatement(selectEventSql.toString());
+        ResultSet results = selectEventsStmt.executeQuery();
 
         List<Event> listOfEvents = new ArrayList<>();
         while(results.next()) {
@@ -84,28 +96,29 @@ public class DataFetcherManager {
         return listOfEvents;
     }
 
-//    public static ClientInfo getTickets(Connection con, String userId) throws SQLException {
-//        String selectAllContactsSql = "SELECT * FROM transaction WHERE buyer_id = '" + userId + "';";
-//        PreparedStatement selectEmailStmt = con.prepareStatement(selectEmailSql);
-//        ResultSet results = selectEmailStmt.executeQuery();
-//
-//        ClientInfo clientInfo = new ClientInfo();
-//
-//        if (results.next()) {
-//            clientInfo.setName(results.getString("name"));
-//            clientInfo.setEmail(results.getString("email"));
-//            clientInfo.setZipcode(results.getString("zipcode"));
-//        }
-//
-//        return clientInfo;
-//    }
+    public static List<Ticket> getTickets(Connection con, String userId, boolean isDescending, int size) throws SQLException {
+        String selectTicketSql = "SELECT * FROM ticket WHERE user_id = '" + userId + "' ORDER BY ticket_id ASC LIMIT " + size +";";
+        PreparedStatement selectTicketStmt = con.prepareStatement(selectTicketSql);
+        ResultSet results = selectTicketStmt.executeQuery();
+
+        List<Ticket> listOfTickets = new ArrayList<>();
+        if (results.next()) {
+            Ticket ticket = new Ticket();
+            ticket.setTicketId(results.getInt("ticket_id"));
+            ticket.setUserId(results.getString("user_id"));
+            ticket.setEventId(results.getInt("event_id"));
+            listOfTickets.add(ticket);
+        }
+
+        return listOfTickets;
+    }
 
     public static List<Event> getTransactions(Connection con, String sessionId) throws SQLException {
-        String selectAllContactsSql = "SELECT * FROM transaction WHERE buyer_id = " +
+        String selectTransactionsSql = "SELECT * FROM transaction WHERE buyer_id = " +
                 "(SELECT user_id FROM user_session WHERE session_id = '" + sessionId + "') OR seller_id =" +
                 "(SELECT user_id FROM user_session WHERE session_id = '" + sessionId + "');";
 
-        PreparedStatement selectAllContactsStmt = con.prepareStatement(selectAllContactsSql);
+        PreparedStatement selectAllContactsStmt = con.prepareStatement(selectTransactionsSql);
         ResultSet results = selectAllContactsStmt.executeQuery();
         while(results.next()) {
             System.out.printf("Name: %s\n", results.getString("name"));

@@ -5,6 +5,7 @@ import cs601.project4.database.DBCPDataSource;
 import cs601.project4.database.DataFetcherManager;
 import cs601.project4.database.DataInsertionManager;
 import cs601.project4.database.DataUpdaterManager;
+import cs601.project4.tableobject.Ticket;
 import cs601.project4.utilities.LoginConstants;
 import cs601.project4.tableobject.ClientInfo;
 import cs601.project4.tableobject.Event;
@@ -57,9 +58,8 @@ public class TicketController {
     }
 
     @PostMapping("/ticket/{id}/verified")
-    public String postTicketVerified(@PathVariable (value = "id") int id,
+    public String postTicketVerified(@PathVariable (value = "id") int eventId,
                                      @RequestParam("num-of-ticket") String numOfTicketsStr,
-                                     @RequestParam("ticket-price") String ticketPriceStr,
                                      Model model, HttpServletRequest req) {
 
         Gson gson = new Gson();
@@ -72,28 +72,37 @@ public class TicketController {
         }
 
         int numOfTicket = Integer.parseInt(numOfTicketsStr);
-        double ticketPrice = Double.parseDouble(ticketPriceStr);
+        Event event = getEventFromDatabase(eventId);
+        String responseMsg = "Sorry, there are only " + event.getTicketAvailable() + " tickets left";
 
-        Event event = getEventFromDatabase(id);
-
-        if (event != null && event.getTicketAvailable() >= numOfTicket) {
+        if (event != null && event.getTicketAvailable() >= numOfTicket) { // check if the tickets are not sold out
             int ticketSold = event.getTicketSold() + numOfTicket;
             int ticketAvailable = event.getTicketAvailable() - numOfTicket;
-            updateEventDatabase(id, ticketSold, ticketAvailable);
+            updateEventInDatabase(eventId, ticketSold, ticketAvailable); // update the ticket amount in db
 
-            String adminId = "00000000000000000000";
+            String sellerId = getSellerId(eventId);
             String buyerId = clientInfo.getUniqueId();
-            insertTransactionDatabase(ticketPrice, id, buyerId, adminId);
+
+            if (sellerId != null) {
+                List<Ticket> ticketList = getAvailableTickets(sellerId, numOfTicket);
+                for (int i = 0; i < numOfTicket; i++) {
+                    insertTransactionDatabase(eventId, buyerId, sellerId); // record transaction in the db
+                    updateTicketInDatabase(ticketList.get(i).getTicketId(), buyerId); // update the ticket owner
+                }
+            }
+            responseMsg = "Thank you for purchasing with us! Enjoy your upcoming event!";
         }
+
+        model.addAttribute("responseMsg", responseMsg);
 
         return ("ticket-verified");
     }
 
-
     private Event getEventFromDatabase(int id) {
         Event event = null;
         try (Connection connection = DBCPDataSource.getConnection()){
-            List<Event> listEvents = DataFetcherManager.getEvents(connection, 0, null, id);
+            List<Event> listEvents = DataFetcherManager.getEvents(connection,
+                    null, null, id, false, 0);
             if (listEvents.size() == 1) {
                 event = listEvents.get(0);
             }
@@ -103,8 +112,7 @@ public class TicketController {
         return event;
     }
 
-
-    private void updateEventDatabase(int eventId, int ticketSold, int ticketAvailable) {
+    private void updateEventInDatabase(int eventId, int ticketSold, int ticketAvailable) {
         try (Connection connection = DBCPDataSource.getConnection()){
             DataUpdaterManager.updateEvent(connection, eventId, ticketSold, ticketAvailable);
         } catch(SQLException e) {
@@ -112,10 +120,42 @@ public class TicketController {
         }
     }
 
-
-    private void insertTransactionDatabase(double ticketPrice, int eventId, String buyerId, String sellerId) {
+    private String getSellerId(int eventId) {
+        Event event = null;
         try (Connection connection = DBCPDataSource.getConnection()){
-            DataInsertionManager.insertToTransaction(connection, ticketPrice, eventId, buyerId, sellerId);
+            List<Event> listEvents = DataFetcherManager.getEvents(connection,
+                    null, null, eventId, false, 0);
+            if (listEvents.size() == 1) {
+                event = listEvents.get(0);
+                return event.getOrganizer();
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private void insertTransactionDatabase(int ticketId, String buyerId, String sellerId) {
+        try (Connection connection = DBCPDataSource.getConnection()){
+            DataInsertionManager.insertToTransaction(connection, ticketId, buyerId, sellerId);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<Ticket> getAvailableTickets(String userId, int size) {
+        List<Ticket> listTickets = null;
+        try (Connection connection = DBCPDataSource.getConnection()){
+            listTickets = DataFetcherManager.getTickets(connection, userId, false, size);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return listTickets;
+    }
+
+    private void updateTicketInDatabase(int ticketId, String userId) {
+        try (Connection connection = DBCPDataSource.getConnection()){
+            DataUpdaterManager.updateTicket(connection, ticketId, userId);
         } catch(SQLException e) {
             e.printStackTrace();
         }

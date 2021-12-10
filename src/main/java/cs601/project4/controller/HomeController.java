@@ -38,7 +38,8 @@ public class HomeController {
         }
 
         try (Connection connection = DBCPDataSource.getConnection()){
-            List<Event> listEvents = DataFetcherManager.getEvents(connection, 5, null, 0);
+            List<Event> listEvents = DataFetcherManager.getEvents(connection,
+                    null, null, 0, false, 5);
             if (listEvents.size() > 5) {
                 model.addAttribute("showMore", "true");
             }

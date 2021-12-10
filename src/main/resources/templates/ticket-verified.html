@@ -37,7 +37,7 @@
                     <!--action - calling http POST method to /user-settings-->
                     <!--th:object - calling an object that is stored in model attribute, in this case the object is SettingBean-->
                     <div id="key-value-wrapper">
-                        <p id="purchase-message">Thank you for purchasing with us! Enjoy your upcoming event!</p>
+                        <p id="purchase-message" th:text=${responseMsg}" />
                     </div>
                 </div>
             </div>

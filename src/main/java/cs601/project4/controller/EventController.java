@@ -40,7 +40,8 @@ public class EventController {
         }
 
         try (Connection connection = DBCPDataSource.getConnection()){
-            List<Event> listEvents = DataFetcherManager.getEvents(connection, 0, null, id);
+            List<Event> listEvents = DataFetcherManager.getEvents(connection,
+                    null, null, id, false, 0);
             if (listEvents.size() == 1) {
                 Event event = listEvents.get(0);
                 model.addAttribute("event", event);
@@ -122,15 +123,15 @@ public class EventController {
                 ticketTotal = 0;
             }
 
-            try (Connection connection = DBCPDataSource.getConnection()){
-                DataInsertionManager.insertToEvent(
-                        connection, eventName, startTimeStamp, endTimeStamp,
-                        description, ticketPrice, ticketTotal, 0,
-                        ticketTotal, userId, address, city, state, zipcode
-                );
+            addEventToDatabase(eventName, startTimeStamp, endTimeStamp,
+                    description, ticketPrice, ticketTotal, 0, userId,
+                    address, city, state, zipcode);
 
-            } catch(SQLException e) {
-                e.printStackTrace();
+            int eventId = getEventId(clientInfo.getUniqueId());
+            if (eventId != 0) {
+                for (int i = 0; i < ticketTotal; i++) {
+                    addTicketToDatabase(clientInfo.getUniqueId(), eventId);
+                }
             }
         } catch (Exception e){
             System.out.println(e);
@@ -190,4 +191,44 @@ public class EventController {
 
         return null;
     }
+
+    private void addTicketToDatabase(String userId, int eventId) {
+        try (Connection connection = DBCPDataSource.getConnection()){
+            DataInsertionManager.insertToTicket(connection, userId, eventId);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addEventToDatabase(
+            String eventName, Timestamp startTimeStamp, Timestamp endTimeStamp,
+            String description, double ticketPrice, int ticketTotal, int ticketSold,
+            String userId, String address, String city, String state, String zipcode
+    ) {
+        try (Connection connection = DBCPDataSource.getConnection()){
+            DataInsertionManager.insertToEvent(
+                    connection, eventName, startTimeStamp, endTimeStamp,
+                    description, ticketPrice, ticketTotal, ticketSold,
+                    ticketTotal, userId, address, city, state, zipcode
+            );
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int getEventId(String userId) {
+        try (Connection connection = DBCPDataSource.getConnection()){
+            List<Event> listEvents = DataFetcherManager.getEvents(connection,
+                    userId, null, 0, false, 1);
+            if (listEvents.size() == 1) {
+                Event event = listEvents.get(0);
+                return event.getEventId();
+            }
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 }

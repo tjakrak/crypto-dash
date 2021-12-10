@@ -53,24 +53,24 @@ public class DataInsertionManager {
         insertUserToSessionStmt.executeUpdate();
     }
 
-    public static void insertToTicket(Connection con, int eventId) throws SQLException {
-        String insertTicketSql = "INSERT INTO ticket (event_id) VALUES (?, ?);";
+    public static void insertToTicket(Connection con, String userId, int eventId) throws SQLException {
+        String insertTicketSql = "INSERT INTO ticket (user_id, event_id) VALUES (?, ?);";
         PreparedStatement insertTicketStmt = con.prepareStatement(insertTicketSql);
+        insertTicketStmt.setString(1, userId);
         insertTicketStmt.setInt(2, eventId);
         insertTicketStmt.executeUpdate();
     }
 
-    public static void insertToTransaction(Connection con, double ticketPrice, int eventId,
-                                           String buyerId, String sellerId) throws SQLException {
-        String insertTransactionSql = "INSERT INTO transaction (transaction_date, ticket_price, " +
-                "event_id, buyer_id, seller_id) VALUES (?, ?, ?, ?, ?);";
+    public static void insertToTransaction(Connection con, int ticketId, String buyerId,
+                                           String sellerId) throws SQLException {
+        String insertTransactionSql = "INSERT INTO transaction (transaction_date, ticket_id, " +
+                "buyer_id, seller_id) VALUES (?, ?, ?, ?);";
 
         PreparedStatement insertTransactionStmt = con.prepareStatement(insertTransactionSql);
         Timestamp transactionDate = new Timestamp(System.currentTimeMillis());
 
         insertTransactionStmt.setTimestamp(1, transactionDate);
-        insertTransactionStmt.setDouble(2, ticketPrice);
-        insertTransactionStmt.setInt(3, eventId);
+        insertTransactionStmt.setInt(2, ticketId);
         insertTransactionStmt.setString(4, buyerId);
         insertTransactionStmt.setString(5, sellerId);
 
