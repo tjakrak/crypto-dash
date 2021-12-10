@@ -73,7 +73,11 @@ public class TicketController {
 
         int numOfTicket = Integer.parseInt(numOfTicketsStr);
         Event event = getEventFromDatabase(eventId);
-        String responseMsg = "Sorry, there are only " + event.getTicketAvailable() + " tickets left";
+
+        String responseMsg = "";
+        if (event != null) {
+            responseMsg = "Sorry, there are only " + event.getTicketAvailable() + " tickets left";
+        }
 
         if (event != null && event.getTicketAvailable() >= numOfTicket) { // check if the tickets are not sold out
             int ticketSold = event.getTicketSold() + numOfTicket;
@@ -83,14 +87,16 @@ public class TicketController {
             String sellerId = getSellerId(eventId);
             String buyerId = clientInfo.getUniqueId();
 
-            if (sellerId != null) {
+            if (sellerId.equals(buyerId)) {
+                responseMsg = "Sorry, cannot process the transaction because you are the organizer of this event.";
+            } else {
                 List<Ticket> ticketList = getAvailableTickets(sellerId, numOfTicket);
                 for (int i = 0; i < numOfTicket; i++) {
                     insertTransactionDatabase(eventId, buyerId, sellerId); // record transaction in the db
                     updateTicketInDatabase(ticketList.get(i).getTicketId(), buyerId); // update the ticket owner
                 }
+                responseMsg = "Thank you for purchasing with us! Enjoy your upcoming event!";
             }
-            responseMsg = "Thank you for purchasing with us! Enjoy your upcoming event!";
         }
 
         model.addAttribute("responseMsg", responseMsg);
@@ -121,7 +127,7 @@ public class TicketController {
     }
 
     private String getSellerId(int eventId) {
-        Event event = null;
+        Event event;
         try (Connection connection = DBCPDataSource.getConnection()){
             List<Event> listEvents = DataFetcherManager.getEvents(connection,
                     null, null, eventId, false, 0);

@@ -1,6 +1,9 @@
 package cs601.project4.controller;
 
 import com.google.gson.Gson;
+import cs601.project4.database.DBCPDataSource;
+import cs601.project4.database.DataFetcherManager;
+import cs601.project4.database.DataUpdaterManager;
 import cs601.project4.utilities.LoginConstants;
 import cs601.project4.tableobject.ClientInfo;
 import org.springframework.stereotype.Controller;
@@ -9,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 @Controller
 public class MyTicketController {
@@ -24,16 +29,6 @@ public class MyTicketController {
             return "redirect:/login";
         }
 
-//        try (Connection connection = DBCPDataSource.getConnection()){
-//            List<Event> listEvents = DataFetcherManager.getEvents(connection, 5, null, 0);
-//            if (listEvents.size() > 5) {
-//                model.addAttribute("showMore", "true");
-//            }
-//            model.addAttribute("listEvents", listEvents);
-//            model.addAttribute("name", clientInfo.getName());
-//        } catch(SQLException e) {
-//            e.printStackTrace();
-//        }
 
         return "my-ticket";
     }
@@ -54,4 +49,12 @@ public class MyTicketController {
 
         return "ticket";
     }
+
+//    private int getUserTicket(String userId) {
+//        try (Connection connection = DBCPDataSource.getConnection()){
+//            DataFetcherManager
+//        } catch(SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

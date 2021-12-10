@@ -126,8 +126,43 @@ public class DataFetcherManager {
             System.out.printf("Email: %s\n", results.getString("email"));
             System.out.printf("Start Date: %s\n", results.getString("startdate"));
         }
+
         return null;
     }
 
+    public static int getTicketCount(Connection con, String userId) throws SQLException {
+        String selectTicketCountSql = "SELECT COUNT(*) AS ticket_num FROM ticket WHERE user_id = '" + userId + "';";
+        PreparedStatement selectTicketStmt = con.prepareStatement(selectTicketCountSql);
+        ResultSet results = selectTicketStmt.executeQuery();
+
+        int ticketCount = 0;
+        if (results.next()) {
+            ticketCount = results.getInt("ticket_num");
+        }
+
+        return ticketCount;
+    }
+
+    public static List<Event> getUserEventsInfo(Connection con, String userId) throws SQLException {
+        String getTicketSql =
+                "SELECT event.name, user.name " +
+                "FROM event JOIN user ON event.organizer_id = user.user_id " +
+                "JOIN (SELECT event_id FROM ticket WHERE user_id = '"+ userId +"' " +
+                "GROUP BY event_id) t ON t.event_id = event.event_id;";
+
+        PreparedStatement selectTicketStmt = con.prepareStatement(getTicketSql);
+        ResultSet results = selectTicketStmt.executeQuery();
+
+        List<Event> eventList = new ArrayList<>();
+
+        if (results.next()) {
+            Event event = new Event();
+            event.setName(results.getString("event.name"));
+            event.setOrganizer(results.getString("user.name"));
+            eventList.add(event);
+        }
+
+        return eventList;
+    }
 
 }
