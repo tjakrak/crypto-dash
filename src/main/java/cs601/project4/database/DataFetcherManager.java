@@ -70,6 +70,7 @@ public class DataFetcherManager {
             event.setEndDate(results.getTimestamp("end_date"));
             event.setDescription(results.getString("description"));
             event.setTicketPrice(results.getInt("ticket_price"));
+            event.setTicketTotal(results.getInt("ticket_total"));
             event.setTicketSold(results.getInt("ticket_sold"));
             event.setTicketAvailable(results.getInt("ticket_available"));
             event.setOrganizer(results.getString("organizer_id"));

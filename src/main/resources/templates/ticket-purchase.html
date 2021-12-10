@@ -36,7 +36,7 @@
                 <div id="form-wrapper">
                     <!--action - calling http POST method to /user-settings-->
                     <!--th:object - calling an object that is stored in model attribute, in this case the object is SettingBean-->
-                    <form th:action="@{/event/create}" method="post">
+                    <form th:action="@{/ticket/{id}/verified(id=${id})}" method="post">
                         <div id="key-value-wrapper">
                             <!--key-->
                             <ul id="key-wrapper">
@@ -48,9 +48,11 @@
                                 <!--th:value - mapped from setting controller mode attribute-->
                                 <!--name - has to be the same as variable in SettingBean-->
                                 <li>
+                                    <input type="hidden" id="num-of-ticket" name="num-of-ticket" th:value="${numTickets}" />
                                     <label th:text="${numTickets}" />
                                 </li>
                                 <li>
+                                    <input type="hidden" id="ticket-price" name="ticket-price" th:value="${price}" />
                                     <label th:text="${price}" />
                                 </li>
                             </ul>

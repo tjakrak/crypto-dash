@@ -65,19 +65,19 @@ public class DataInsertionManager {
         insertTicketStmt.executeUpdate();
     }
 
-    public static void insertToTransaction(Connection con, double ticketPrice, int ticketId,
-                                           int buyerId, int sellerId) throws SQLException {
-        String insertTransactionSql = "INSERT INTO transaction (transaction_date, ticket_price, ticket_id, buyer_id," +
-                "seller_id) VALUES (?, ?, ?, ?, ?);";
+    public static void insertToTransaction(Connection con, double ticketPrice, int eventId,
+                                           String buyerId, String sellerId) throws SQLException {
+        String insertTransactionSql = "INSERT INTO transaction (transaction_date, ticket_price, " +
+                "event_id, buyer_id, seller_id) VALUES (?, ?, ?, ?, ?);";
 
         PreparedStatement insertTransactionStmt = con.prepareStatement(insertTransactionSql);
         Timestamp transactionDate = new Timestamp(System.currentTimeMillis());
 
         insertTransactionStmt.setTimestamp(1, transactionDate);
         insertTransactionStmt.setDouble(2, ticketPrice);
-        insertTransactionStmt.setInt(3, ticketId);
-        insertTransactionStmt.setInt(4, buyerId);
-        insertTransactionStmt.setInt(5, sellerId);
+        insertTransactionStmt.setInt(3, eventId);
+        insertTransactionStmt.setString(4, buyerId);
+        insertTransactionStmt.setString(5, sellerId);
 
         insertTransactionStmt.executeUpdate();
     }
