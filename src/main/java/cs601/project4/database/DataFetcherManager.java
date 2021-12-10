@@ -45,7 +45,6 @@ public class DataFetcherManager {
 
     public static List<Event> getEvents(Connection con, String organizerId, String zipcode,
                                         int eventId, Boolean isDescending, int size) throws SQLException {
-
         StringBuffer selectEventSql = new StringBuffer();
         selectEventSql.append("SELECT * FROM event");
         //String selectEventSql = "SELECT * FROM event;";
@@ -57,7 +56,7 @@ public class DataFetcherManager {
         } else if (eventId != 0) {
             selectEventSql.append(" WHERE event_id = " + eventId);
         } else if (organizerId != null) {
-            selectEventSql.append(" WHERE organizer_id = " + organizerId);
+            selectEventSql.append(" WHERE organizer_id = '" + organizerId + "'");
         }
 
         if (isDescending) {
@@ -93,6 +92,7 @@ public class DataFetcherManager {
             event.setFullAddress();
             listOfEvents.add(event);;
         }
+
         return listOfEvents;
     }
 

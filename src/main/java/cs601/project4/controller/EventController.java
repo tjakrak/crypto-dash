@@ -128,6 +128,7 @@ public class EventController {
                     address, city, state, zipcode);
 
             int eventId = getEventId(clientInfo.getUniqueId());
+
             if (eventId != 0) {
                 for (int i = 0; i < ticketTotal; i++) {
                     addTicketToDatabase(clientInfo.getUniqueId(), eventId);
@@ -192,7 +193,7 @@ public class EventController {
         return null;
     }
 
-    private void addTicketToDatabase(String userId, int eventId) {
+    public void addTicketToDatabase(String userId, int eventId) {
         try (Connection connection = DBCPDataSource.getConnection()){
             DataInsertionManager.insertToTicket(connection, userId, eventId);
         } catch(SQLException e) {
@@ -220,7 +221,7 @@ public class EventController {
     private int getEventId(String userId) {
         try (Connection connection = DBCPDataSource.getConnection()){
             List<Event> listEvents = DataFetcherManager.getEvents(connection,
-                    userId, null, 0, false, 1);
+                    userId, null, 0, true, 1);
             if (listEvents.size() == 1) {
                 Event event = listEvents.get(0);
                 return event.getEventId();
