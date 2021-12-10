@@ -55,7 +55,7 @@ public class TicketController {
         String.valueOf(price);
         String ticketQty = numOfTickets;
 
-        model.addAttribute("num-of-tickets", ticketQty);
+        model.addAttribute("numTickets", ticketQty);
         model.addAttribute("price", price);
 
 

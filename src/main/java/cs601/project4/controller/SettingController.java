@@ -20,7 +20,7 @@ import java.sql.SQLException;
 public class SettingController {
     Gson gson = new Gson();
 
-    @GetMapping("/user-settings")
+    @GetMapping("/user/settings")
     public String getUserSetting(Model model, HttpServletRequest req) {
         ClientInfo clientInfo = getClientInfo(req);
 
@@ -44,7 +44,7 @@ public class SettingController {
         return "setting";
     }
 
-    @PostMapping("/user-settings")
+    @PostMapping("/user/settings")
     public String postUserSetting(@ModelAttribute("settingBean") SettingBean settingBean, HttpServletRequest req) {
         String name = settingBean.getName();
         String email = settingBean.getEmail();
@@ -63,7 +63,7 @@ public class SettingController {
         }
 
         //update sql database;
-        return "redirect:/user-settings";
+        return "redirect:/user/settings";
     }
 
     private String validateInput(String name, String email) {
