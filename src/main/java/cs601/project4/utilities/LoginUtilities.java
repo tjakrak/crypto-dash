@@ -2,9 +2,7 @@ package cs601.project4.utilities;
 
 import com.google.gson.Gson;
 //import cs601.project4.server.AppServer;
-import com.mysql.cj.log.Log;
-import cs601.project4.server.LoginServerConstants;
-import cs601.project4.utilities.gson.ClientInfo;
+import cs601.project4.tableobject.ClientInfo;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.StringReader;
@@ -39,22 +37,22 @@ public class LoginUtilities {
      * @param redirectURI
      * @return
      */
-    public static String generateSlackAuthorizeURL(String clientId, String state, String nonce, String redirectURI) {
-
+    public static String generateSlackAuthorizeURL(String clientId, String state,
+                                                   String nonce, String redirectURI) {
         String url = String.format("https://%s/%s?%s=%s&%s=%s&%s=%s&%s=%s&%s=%s&%s=%s",
-                LoginServerConstants.HOST,
-                LoginServerConstants.AUTH_PATH,
-                LoginServerConstants.RESPONSE_TYPE_KEY,
-                LoginServerConstants.RESPONSE_TYPE_VALUE,
-                LoginServerConstants.SCOPE_KEY,
-                LoginServerConstants.SCOPE_VALUE,
-                LoginServerConstants.CLIENT_ID_KEY,
+                LoginConstants.HOST,
+                LoginConstants.AUTH_PATH,
+                LoginConstants.RESPONSE_TYPE_KEY,
+                LoginConstants.RESPONSE_TYPE_VALUE,
+                LoginConstants.SCOPE_KEY,
+                LoginConstants.SCOPE_VALUE,
+                LoginConstants.CLIENT_ID_KEY,
                 clientId,
-                LoginServerConstants.STATE_KEY,
+                LoginConstants.STATE_KEY,
                 state,
-                LoginServerConstants.NONCE_KEY,
+                LoginConstants.NONCE_KEY,
                 nonce,
-                LoginServerConstants.REDIRECT_URI_KEY,
+                LoginConstants.REDIRECT_URI_KEY,
                 redirectURI
         );
         return url;
@@ -68,18 +66,18 @@ public class LoginUtilities {
      * @param redirectURI
      * @return
      */
-    public static String generateSlackTokenURL(String clientId, String clientSecret, String code, String redirectURI) {
-
+    public static String generateSlackTokenURL(String clientId, String clientSecret,
+                                               String code, String redirectURI) {
         String url = String.format("https://%s/%s?%s=%s&%s=%s&%s=%s&%s=%s",
-                LoginServerConstants.HOST,
-                LoginServerConstants.TOKEN_PATH,
-                LoginServerConstants.CLIENT_ID_KEY,
+                LoginConstants.HOST,
+                LoginConstants.TOKEN_PATH,
+                LoginConstants.CLIENT_ID_KEY,
                 clientId,
-                LoginServerConstants.CLIENT_SECRET_KEY,
+                LoginConstants.CLIENT_SECRET_KEY,
                 clientSecret,
-                LoginServerConstants.CODE_KEY,
+                LoginConstants.CODE_KEY,
                 code,
-                LoginServerConstants.REDIRECT_URI_KEY,
+                LoginConstants.REDIRECT_URI_KEY,
                 redirectURI
         );
         return url;
@@ -104,15 +102,16 @@ public class LoginUtilities {
      * @return
      */
     public static ClientInfo verifyTokenResponse(Map<String, Object> map, String sessionId) {
-
         // verify ok: true
-        if(!map.containsKey(LoginServerConstants.OK_KEY) || !(boolean)map.get(LoginServerConstants.OK_KEY)) {
+        if(!map.containsKey(LoginConstants.OK_KEY) || !(boolean)map.get(LoginConstants.OK_KEY)) {
             return null;
         }
 
         // verify state is the users session cookie id
-        if(!map.containsKey(LoginServerConstants.STATE_KEY) || !map.get(LoginServerConstants.STATE_KEY).equals(sessionId)) {
-            System.out.println(map.get(LoginServerConstants.STATE_KEY));
+        if(!map.containsKey(LoginConstants.STATE_KEY) ||
+                !map.get(LoginConstants.STATE_KEY).equals(sessionId)) {
+
+            System.out.println(map.get(LoginConstants.STATE_KEY));
             System.out.println(sessionId);
             return null;
         }
@@ -124,16 +123,16 @@ public class LoginUtilities {
 
         // verify nonce
         String expectedNonce = generateNonce(sessionId);
-        String actualNonce = (String) payloadMap.get(LoginServerConstants.NONCE_KEY);
+        String actualNonce = (String) payloadMap.get(LoginConstants.NONCE_KEY);
         if(!expectedNonce.equals(actualNonce)) {
             return null;
         }
 
         // extract name from response
-        String username = (String) payloadMap.get(LoginServerConstants.NAME_KEY);
-        String email = (String) payloadMap.get(LoginServerConstants.EMAIL);
-        String userId = (String) payloadMap.get(LoginServerConstants.USER_ID);
-        String teamId = (String) payloadMap.get(LoginServerConstants.TEAM_ID);
+        String username = (String) payloadMap.get(LoginConstants.NAME_KEY);
+        String email = (String) payloadMap.get(LoginConstants.EMAIL);
+        String userId = (String) payloadMap.get(LoginConstants.USER_ID);
+        String teamId = (String) payloadMap.get(LoginConstants.TEAM_ID);
 
         return new ClientInfo(username, email, userId, teamId);
     }
@@ -162,6 +161,5 @@ public class LoginUtilities {
         Map<String, Object> payloadMap = gson.fromJson(new StringReader(payload), Map.class);
         return payloadMap;
     }
-
 
 }

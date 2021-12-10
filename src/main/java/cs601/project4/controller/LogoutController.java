@@ -1,8 +1,7 @@
 package cs601.project4.controller;
 
-import cs601.project4.server.LoginServerConstants;
+import cs601.project4.utilities.LoginConstants;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +18,9 @@ public class LogoutController {
     public String logout(HttpServletRequest req) {
 
         // check if the user is not logged in
-        Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
+        Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
         if (clientInfoObj == null) {
-            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "1");
+            req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "1");
             return "redirect:/login";
         }
 

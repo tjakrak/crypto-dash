@@ -1,7 +1,7 @@
 package cs601.project4.database;
 
-import cs601.project4.utilities.gson.ClientInfo;
-import cs601.project4.utilities.gson.Event;
+import cs601.project4.tableobject.ClientInfo;
+import cs601.project4.tableobject.Event;
 
 import java.sql.*;
 import java.util.ArrayList;

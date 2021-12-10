@@ -1,7 +1,7 @@
 package cs601.project4.database;
 
 import cs601.project4.server.NoStayHomeAppServer;
-import cs601.project4.utilities.gson.DbConfig;
+import cs601.project4.config.DbConfig;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;

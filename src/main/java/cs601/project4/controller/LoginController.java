@@ -4,12 +4,12 @@ import com.google.gson.Gson;
 import cs601.project4.database.DBCPDataSource;
 import cs601.project4.database.DataFetcherManager;
 import cs601.project4.database.DataInsertionManager;
-import cs601.project4.server.LoginServerConstants;
+import cs601.project4.utilities.LoginConstants;
 import cs601.project4.server.NoStayHomeAppServer;
 import cs601.project4.utilities.HTTPFetcher;
 import cs601.project4.utilities.LoginUtilities;
-import cs601.project4.utilities.gson.ClientInfo;
-import cs601.project4.utilities.gson.SlackConfig;
+import cs601.project4.tableobject.ClientInfo;
+import cs601.project4.config.SlackConfig;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,11 +34,11 @@ public class LoginController {
         // retrieve the ID of this session
         String sessionId = req.getSession(true).getId();
         // determine whether the user is already authenticated
-        Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
+        Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
         // config_key will be uploaded to the session when the user visited login page
-        Object clientConfigKeyObj = req.getSession().getAttribute(LoginServerConstants.SLACK_API_CONFIG_KEY);
+        Object clientConfigKeyObj = req.getSession().getAttribute(LoginConstants.SLACK_API_CONFIG_KEY);
         // is_fail value is '1' if the user try to access other pages without logging in, otherwise '0'
-        String clientFailToLogin = (String) req.getSession().getAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN);
+        String clientFailToLogin = (String) req.getSession().getAttribute(LoginConstants.IS_FAIL_TO_LOGIN);
 
         if (clientInfoObj != null) {  // ---------------------------------------------- the user already authenticated
             return "redirect:/home ";
@@ -48,7 +48,7 @@ public class LoginController {
                 req.getSession().invalidate();
                 return "redirect:/login";
             } else {                  // ---------------------------------------------- user login successfully
-                clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
+                clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
                 addNewUserToDb(sessionId, clientInfoObj);
                 return "redirect:/home";
             }
@@ -92,11 +92,11 @@ public class LoginController {
     private Boolean slackLoginVerifier(HttpServletRequest req, String sessionId) {
         // retrieve the config info from the session attribute and convert it to Config object
         Gson gson = new Gson();
-        Object slackConfigObj = req.getSession().getAttribute(LoginServerConstants.SLACK_API_CONFIG_KEY);
+        Object slackConfigObj = req.getSession().getAttribute(LoginConstants.SLACK_API_CONFIG_KEY);
         SlackConfig slackConfig = gson.fromJson((String) slackConfigObj, SlackConfig.class);
 
         // getting the "code" parameter from the Slack API response
-        String code = req.getParameter(LoginServerConstants.CODE_KEY);
+        String code = req.getParameter(LoginConstants.CODE_KEY);
         // generate string url for slack authentication
         String url = LoginUtilities.generateSlackTokenURL(
                 slackConfig.getClient_id(),
@@ -116,7 +116,7 @@ public class LoginController {
         if(clientInfo == null) {    // --- if the user is not verified
             return false;
         } else {                    // --- if the user is verified
-            req.getSession().setAttribute(LoginServerConstants.CLIENT_INFO_KEY, new Gson().toJson(clientInfo));
+            req.getSession().setAttribute(LoginConstants.CLIENT_INFO_KEY, new Gson().toJson(clientInfo));
             return true;
         }
     }
@@ -137,7 +137,7 @@ public class LoginController {
         // it can be shared across different controller
         // store it as json formatted string (GSON -> json)
         SlackConfig config = NoStayHomeAppServer.readSlackAuthConfig();
-        req.getSession().setAttribute(LoginServerConstants.SLACK_API_CONFIG_KEY, new Gson().toJson(config));
+        req.getSession().setAttribute(LoginConstants.SLACK_API_CONFIG_KEY, new Gson().toJson(config));
 
         // Generate url to send a request to SlackApi
         String url = LoginUtilities.generateSlackAuthorizeURL(config.getClient_id(),
@@ -149,9 +149,9 @@ public class LoginController {
         model.addAttribute("url", url);
 
         // if the user try to visit other page without logging in isFail = 1, otherwise isFail = Null
-        model.addAttribute("isFail", req.getSession().getAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN));
+        model.addAttribute("isFail", req.getSession().getAttribute(LoginConstants.IS_FAIL_TO_LOGIN));
         // reset to false
-        req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "0");
+        req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "0");
     }
 
 }

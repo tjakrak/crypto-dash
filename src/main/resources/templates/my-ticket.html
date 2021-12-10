@@ -1,10 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <link href="../static/styles/style.css" th:href="@{styles/style.css}" rel="stylesheet" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+        <meta charset="UTF-8">
+        <title>Tickets Purchase</title>
+    </head>
 
-</body>
+    <body>
+        <div id="header-wrapper">
+            <header>
+                <div id="header-left">
+                    <!--upload logo to the page-->
+                    <a href="/"><img src="../static/images/eventbase.png" width="150" th:src="@{images/eventbase.png}" /></a>
+                </div>
+                <div id="header-right">
+                    <!--menu bar-->
+                    <ul>
+                        <li><a href="/event/create">create an event</a></li>
+                        <li><a href="/">my tickets</a></li>
+                        <li><a href="/logout">logout</a></li>
+                        <li><a href="/user/settings"><i class="fas fa-user-cog"></i></a></li>
+                    </ul>
+                </div>
+            </header>
+        </div>
+        <div id="outer-top-body-bg">
+            <h1>Welcome <span th:text="${name}"></span>!</h1>
+        </div>
+        <div id="inner-body-bg">
+            <div id="wrapper-content">
+                <!--search bar here-->
+                <form action="/">
+                    <div id="search-bar-wrapper">
+                        <input class="search-bar" type="text" placeholder="Search events..">
+                    </div>
+                </form>
+                <!--list of events here-->
+                <div id="event-list-content-wrapper">
+                    <ul id="event-list">
+                        <li  th:each="event : ${listEvents}">
+                            <a th:href="@{/event/{id}(id=${event.eventId})}">
+                                <div id="each-list-wrapper">
+                                    <h1 th:text="${event.name}" />
+                                    <p id="event-date" th:text="${event.startDate}" />
+                                    <p th:text="${event.fullAddress}" />
+                                    <p th:text="'$' + ${event.ticketPrice}" />
+                                </div>
+                            </a>
+                        </li>
+                        <div th:if = "${showMore == null}">
+                            <br />
+                        </div>
+                        <li th:if = "${showMore == 'true'}">
+                            <a href="/event">
+                                <div id="show-more-wrapper">
+                                    <h1>Show more...</h1>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="footer-wrapper">
+            <footer id="footer">
+                <p>Copyright 2021 &copy; Privacy Policy</p>
+            </footer>
+        </div>
+    </body>
 </html>

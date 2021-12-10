@@ -1,9 +1,9 @@
-package cs601.project4.server;
+package cs601.project4.utilities;
 
 /**
  * A helper class to maintain constants used for the LoginServer example.
  */
-public class LoginServerConstants {
+public class LoginConstants {
 
     // constants necessary to generate url to send to slack to request for oauth
     public static final String HOST = "slack.com";

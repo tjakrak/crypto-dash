@@ -1,8 +1,8 @@
 package cs601.project4.server;
 
 import com.google.gson.Gson;
-import cs601.project4.utilities.gson.DbConfig;
-import cs601.project4.utilities.gson.SlackConfig;
+import cs601.project4.config.DbConfig;
+import cs601.project4.config.SlackConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import cs601.project4.database.DBCPDataSource;
 import cs601.project4.database.DataFetcherManager;
 import cs601.project4.database.DataUpdaterManager;
-import cs601.project4.server.LoginServerConstants;
-import cs601.project4.utilities.gson.ClientInfo;
+import cs601.project4.utilities.LoginConstants;
+import cs601.project4.tableobject.ClientInfo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +25,7 @@ public class SettingController {
         ClientInfo clientInfo = getClientInfo(req);
 
         if (clientInfo == null) { // if the user hasn't logged in to the app
-            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "1");
+            req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "1");
             return "redirect:/login ";
         }
 
@@ -40,12 +40,12 @@ public class SettingController {
         model.addAttribute("currName", clientInfo.getName());
         model.addAttribute("currEmail", clientInfo.getEmail());
         model.addAttribute("currZipcode", clientInfo.getZipcode());
-        model.addAttribute("settingBean", new SettingBean());
+        model.addAttribute("clientInfo", new ClientInfo());
         return "setting";
     }
 
     @PostMapping("/user/settings")
-    public String postUserSetting(@ModelAttribute("settingBean") SettingBean settingBean, HttpServletRequest req) {
+    public String postUserSetting(@ModelAttribute("settingBean") ClientInfo settingBean, HttpServletRequest req) {
         String name = settingBean.getName();
         String email = settingBean.getEmail();
         String zipcode = settingBean.getZipcode();
@@ -78,7 +78,7 @@ public class SettingController {
 
     // move this to other method
     public ClientInfo getClientInfo(HttpServletRequest req) {
-        return gson.fromJson((String) req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY), ClientInfo.class);
+        return gson.fromJson((String) req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY), ClientInfo.class);
     }
 
 }

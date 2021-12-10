@@ -5,12 +5,11 @@ import cs601.project4.database.DBCPDataSource;
 import cs601.project4.database.DataFetcherManager;
 import cs601.project4.database.DataInsertionManager;
 import cs601.project4.database.DataUpdaterManager;
-import cs601.project4.server.LoginServerConstants;
-import cs601.project4.utilities.gson.ClientInfo;
-import cs601.project4.utilities.gson.Event;
+import cs601.project4.utilities.LoginConstants;
+import cs601.project4.tableobject.ClientInfo;
+import cs601.project4.tableobject.Event;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,11 +28,11 @@ public class TicketController {
                                      Model model, HttpServletRequest req) {
 
         Gson gson = new Gson();
-        Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
+        Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
         ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
 
         if (clientInfo == null) { // if the user hasn't logged in to the app
-            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "1");
+            req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "1");
             return "redirect:/login";
         }
 
@@ -64,11 +63,11 @@ public class TicketController {
                                      Model model, HttpServletRequest req) {
 
         Gson gson = new Gson();
-        Object clientInfoObj = req.getSession().getAttribute(LoginServerConstants.CLIENT_INFO_KEY);
+        Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
         ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
 
         if (clientInfo == null) { // if the user hasn't logged in to the app
-            req.getSession().setAttribute(LoginServerConstants.IS_FAIL_TO_LOGIN, "1");
+            req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "1");
             return "redirect:/login";
         }
 

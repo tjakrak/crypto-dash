@@ -1,4 +1,4 @@
-package cs601.project4.utilities.gson;
+package cs601.project4.tableobject;
 
 import java.io.Serializable;
 

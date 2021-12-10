@@ -44,6 +44,7 @@ public class HTTPFetcher {
             System.err.println(e.getMessage());
             return null;
         }
+
     }
 
     /**
@@ -58,7 +59,6 @@ public class HTTPFetcher {
      * @return
      */
     public static String doPost(String url, Map<String, String> headers, String body) {
-
         try {
             HttpRequest.Builder builder = HttpRequest.newBuilder(new URI(url));
             builder = setHeaders(builder, headers);
@@ -74,7 +74,6 @@ public class HTTPFetcher {
             System.err.println(e.getMessage());
             return null;
         }
-
     }
 
     /**
