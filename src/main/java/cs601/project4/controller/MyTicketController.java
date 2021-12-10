@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import cs601.project4.database.DBCPDataSource;
 import cs601.project4.database.DataFetcherManager;
 import cs601.project4.database.DataUpdaterManager;
+import cs601.project4.tableobject.Event;
 import cs601.project4.utilities.LoginConstants;
 import cs601.project4.tableobject.ClientInfo;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class MyTicketController {
@@ -28,7 +31,6 @@ public class MyTicketController {
             req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "1");
             return "redirect:/login";
         }
-
 
         return "my-ticket";
     }
@@ -50,11 +52,15 @@ public class MyTicketController {
         return "ticket";
     }
 
-//    private int getUserTicket(String userId) {
-//        try (Connection connection = DBCPDataSource.getConnection()){
-//            DataFetcherManager
-//        } catch(SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private List<Event> getUserEventList(String userId) {
+        List<Event> eventList = new ArrayList<>();
+        try (Connection connection = DBCPDataSource.getConnection()){
+             eventList = DataFetcherManager.getUserEventsInfo(connection, userId);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return eventList;
+    }
+
+
 }

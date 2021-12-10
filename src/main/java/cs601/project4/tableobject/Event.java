@@ -18,6 +18,7 @@ public class Event {
     private String state;
     private String zipCode;
     private String fullAddress;
+    private int ticketCount;
 
     public int getEventId() { return eventId; }
 
@@ -133,5 +134,13 @@ public class Event {
 
     public void setFullAddress() {
         this.fullAddress = address + ", " + city + ", " + state + " " + zipCode;
+    }
+
+    public int getTicketCount() {
+        return ticketCount;
+    }
+
+    public void setTicketCount(int ticketCount) {
+        this.ticketCount = ticketCount;
     }
 }
