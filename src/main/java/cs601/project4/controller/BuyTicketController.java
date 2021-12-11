@@ -24,7 +24,7 @@ import java.util.List;
 public class BuyTicketController {
 
     @PostMapping("/ticket/{id}/purchase")
-    public String postTicketPurchase(@PathVariable (value = "id") int id,
+    public String postTicketPurchase(@PathVariable (value = "id") int eventId,
                                      @RequestParam("number-of-tickets") String numOfTickets,
                                      Model model, HttpServletRequest req) {
 
@@ -42,7 +42,7 @@ public class BuyTicketController {
         }
 
         double price = 0.00;
-        Event event = getEventFromDatabase(id);
+        Event event = getEventFromDatabase(eventId);
         if (event != null) {
             price = event.getTicketPrice();
         }
@@ -52,7 +52,7 @@ public class BuyTicketController {
 
         model.addAttribute("numTickets", numOfTickets);
         model.addAttribute("price", price);
-        model.addAttribute("id", id);
+        model.addAttribute("id", eventId);
 
         return "ticket-purchase";
     }
@@ -82,7 +82,6 @@ public class BuyTicketController {
         if (event != null && event.getTicketAvailable() >= numOfTicket) { // check if the tickets are not sold out
             int ticketSold = event.getTicketSold() + numOfTicket;
             int ticketAvailable = event.getTicketAvailable() - numOfTicket;
-            updateEventInDatabase(eventId, ticketSold, ticketAvailable); // update the ticket amount in db
 
             String sellerId = getSellerId(eventId);
             String buyerId = clientInfo.getUniqueId();
@@ -90,6 +89,7 @@ public class BuyTicketController {
             if (sellerId.equals(buyerId)) {
                 responseMsg = "Sorry, cannot process the transaction because you are the organizer of this event.";
             } else {
+                updateEventInDatabase(eventId, ticketSold, ticketAvailable); // update the ticket amount in db
                 List<Ticket> ticketList = getAvailableTickets(sellerId, numOfTicket);
                 for (int i = 0; i < numOfTicket; i++) {
                     insertTransactionDatabase(eventId, buyerId, sellerId); // record transaction in the db
@@ -101,14 +101,14 @@ public class BuyTicketController {
 
         model.addAttribute("responseMsg", responseMsg);
 
-        return ("ticket-verified");
+        return ("ticket-purchase-verified");
     }
 
-    private Event getEventFromDatabase(int id) {
+    private Event getEventFromDatabase(int eventId) {
         Event event = null;
         try (Connection connection = DBCPDataSource.getConnection()){
             List<Event> listEvents = DataFetcherManager.getEvents(connection,
-                    null, null, id, false, 0);
+                    null, null, eventId, false, 0);
             if (listEvents.size() == 1) {
                 event = listEvents.get(0);
             }

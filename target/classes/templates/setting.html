@@ -48,12 +48,12 @@
                             <!--th:value - mapped from setting controller mode attribute-->
                             <!--name - has to be the same as variable in SettingBean-->
                             <li>
-                                <input type="text" id="name" name="name" th:value="${currName}" />
+                                <input type="text" maxlength = "40" id="name" name="name" th:value="${currName}" />
                             <li>
-                                <input type="text" id="email" name="email" th:value="${currEmail}" />
+                                <input type="text" maxlength = "40" id="email" name="email" th:value="${currEmail}" />
                             </li>
                             <li>
-                                <input type="text" id="zipcode" name="zipcode" th:value="${currZipcode}" />
+                                <input type="text" maxlength = "20" id="zipcode" name="zipcode" th:value="${currZipcode}" />
                             </li>
                         </ul>
                         <button id="button-wrapper" type="submit">Submit</button>

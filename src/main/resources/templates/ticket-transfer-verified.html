@@ -18,7 +18,7 @@
                 <div id="header-right">
                     <!--menu bar-->
                     <ul>
-                        <li><a href="/event/create">create an event</a></li>
+                        <li><a href="/ticket/my-ticket">create an event</a></li>
                         <li><a href="/ticket/my-ticket">my tickets</a></li>
                         <li><a href="/logout">logout</a></li>
                         <li><a href="/user/settings"><i class="fas fa-user-cog"></i></a></li>
@@ -31,31 +31,14 @@
         </div>
         <div id="inner-body-bg">
             <div id="wrapper-content">
-                <h1 id="main-title">Ticket Transfer</h1>
+                <h1 id="main-title">Transfer Successful</h1>
                 <!--list of events here-->
                 <div id="form-wrapper">
-                    <!--action - calling http POST method to /ticket/{id}/transfer-->
-                    <form th:action="@{/ticket/{id}/transfer(id=${eventId})}" method="post">
-                        <div id="key-value-wrapper">
-                            <!--key-->
-                            <ul id="key-wrapper">
-                                <li><label> Number of Ticket(s) </label></li>
-                                <li><label> Recipient Email Address </label></li>
-                            </ul>
-                            <!--value-->
-                            <ul id="value-wrapper">
-                                <li>
-                                    <select name="ticket-qty">
-                                        <option th:each="n : ${#numbers.sequence(1, maxTix)}" th:value="${n}" th:text="${n}"/>
-                                    </select>
-                                </li>
-                                <li>
-                                    <input type="text" id="recipient-email" name="recipient-email" />
-                                </li>
-                            </ul>
-                        </div>
-                        <button id="middle-button-wrapper" type="submit">Confirm</button>
-                    </form>
+                    <!--action - calling http POST method to /user-settings-->
+                    <!--th:object - calling an object that is stored in model attribute, in this case the object is SettingBean-->
+                    <div id="key-value-wrapper">
+                        <p id="purchase-message" th:text="${responseMsg}" />
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <link href="../static/styles/style.css" th:href="@{../styles/style.css}" rel="stylesheet" />
+    <link href="../static/styles/form-page-style.css" th:href="@{../styles/form-page-style.css}" rel="stylesheet" />
+    <link href="../static/styles/all-list-style.css" th:href="@{../styles/all-list-style.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Create Event</title>
+</head>
+
+<body>
+<div id="header-wrapper">
+    <header>
+        <div id="header-left">
+            <!--upload logo to the page-->
+            <a href="/home"><img src="../static/images/eventbase.png" width="150" th:src="@{../images/eventbase.png}" /></a>
+        </div>
+        <div id="header-right">
+            <!--menu bar-->
+            <ul>
+                <li><a href="/event/create">create an event</a></li>
+                <li><a href="/ticket/my-ticket">my tickets</a></li>
+                <li><a href="/logout">logout</a></li>
+                <li><a href="/user/settings"><i class="fas fa-user-cog"></i></a></li>
+            </ul>
+        </div>
+    </header>
+</div>
+<div id="outer-top-body-bg">
+    <h1>Welcome <span th:text="${name}"></span>!</h1>
+</div>
+<div id="inner-body-bg">
+    <div id="wrapper-content">
+        <h1 id="main-title">My Tickets</h1>
+        <!--list of events here-->
+        <div id="form-content-wrapper">
+            <table id = "table-wrapper">
+                <tr>
+                    <th><h4>Event Name</h4></th>
+                    <th><h4>Organizer</h4></th>
+                    <th><h4>Ticket Amount</h4></th>
+                </tr>
+                <hr>
+                <tr th:each="event : ${listEvents}">
+                    <td><p th:text="${event.name}" /></td>
+                    <td><p th:text="${event.organizer}" /></td>
+                    <td><p th:text="${event.ticketCount}" /></td>
+                    <td>
+                        <a th:href="@{/ticket/{id}/transfer(id=${event.eventId})}">Transfer</a>
+                    </td>
+                </tr>
+            </table>
+            <div th:if = "${totalPages > 1}">
+                <div class = "row col-sm-10">
+                    <div class = "col-sm-2">
+                        Total Rows: [[${totalItems}]]
+                    </div>
+                    <div class = "col-sm-1">
+                                <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                                    <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}}">[[${i}]]</a>
+                                    <span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+                                </span>
+                    </div>
+                    <div class = "col-sm-1">
+                        <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}}">Next</a>
+                        <span th:unless="${currentPage < totalPages}">Next</span>
+                    </div>
+
+                    <div class="col-sm-1">
+                        <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}}">Last</a>
+                        <span th:unless="${currentPage < totalPages}">Last</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="footer-wrapper">
+    <footer id="footer">
+        <p>Copyright 2021 &copy; Privacy Policy</p>
+    </footer>
+</div>
+</body>
+</html>

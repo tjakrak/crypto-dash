@@ -32,7 +32,7 @@ public class SettingController {
         String userId = clientInfo.getUniqueId();
 
         try (Connection connection = DBCPDataSource.getConnection()){
-            clientInfo = DataFetcherManager.getClientInfo(connection, userId);
+            clientInfo = DataFetcherManager.getClientInfo(connection, userId, "");
         } catch(SQLException e) {
             e.printStackTrace();
         }
@@ -46,6 +46,14 @@ public class SettingController {
 
     @PostMapping("/user/settings")
     public String postUserSetting(@ModelAttribute("settingBean") ClientInfo settingBean, HttpServletRequest req) {
+
+        ClientInfo clientInfo = getClientInfo(req);
+
+        if (clientInfo == null) { // if the user hasn't logged in to the app
+            req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "1");
+            return "redirect:/login ";
+        }
+
         String name = settingBean.getName();
         String email = settingBean.getEmail();
         String zipcode = settingBean.getZipcode();
@@ -53,16 +61,14 @@ public class SettingController {
         String validationMsg = validateInput(name, email);
 
         if (validationMsg.equals("validated")) {
-            ClientInfo clientInfo = getClientInfo(req);
             String userId = clientInfo.getUniqueId();
-            try (Connection connection = DBCPDataSource.getConnection()){
-                DataUpdaterManager.updateUser(connection, name, email, zipcode, userId);
-            } catch(SQLException e) {
-                e.printStackTrace();
-            }
+            updateUserInfoDatabase(name, email, zipcode, userId);
         }
 
-        //update sql database;
+        // update the userinfo in the session attribute
+        req.getSession().removeAttribute(LoginConstants.CLIENT_INFO_KEY);
+        req.getSession().setAttribute(LoginConstants.CLIENT_INFO_KEY,  new Gson().toJson(clientInfo));
+
         return "redirect:/user/settings";
     }
 
@@ -77,8 +83,16 @@ public class SettingController {
     }
 
     // move this to other method
-    public ClientInfo getClientInfo(HttpServletRequest req) {
+    private ClientInfo getClientInfo(HttpServletRequest req) {
         return gson.fromJson((String) req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY), ClientInfo.class);
+    }
+
+    private void  updateUserInfoDatabase(String name, String email, String zipcode, String userId) {
+        try (Connection connection = DBCPDataSource.getConnection()){
+            DataUpdaterManager.updateUser(connection, name, email, zipcode, userId);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

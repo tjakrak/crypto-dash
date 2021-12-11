@@ -33,7 +33,7 @@ public class HttpFetcherTest {
     }
 
     @Test
-    public void getUserEventsInfoTest() {
+    public void getUserEventsInfoTestAssertEventName() {
         String expected = "Ryan's Birthday Party";
         try (Connection connection = DBCPDataSource.getConnection()){
             List<Event> eventList = DataFetcherManager.getUserEventsInfo(connection, "U02KS0CHMMKT02DN684M");

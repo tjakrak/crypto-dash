@@ -27,10 +27,21 @@ public class DataFetcherManager {
         }
     }
 
-    public static ClientInfo getClientInfo(Connection con, String userId) throws SQLException {
-        String selectEmailSql = "SELECT * FROM user WHERE user_id = '" + userId + "';";
-        PreparedStatement selectEmailStmt = con.prepareStatement(selectEmailSql);
-        ResultSet results = selectEmailStmt.executeQuery();
+    public static ClientInfo getClientInfo(Connection con, String userId, String email) throws SQLException {
+        StringBuffer selectClientInfoSql = new StringBuffer();
+        selectClientInfoSql.append("SELECT * FROM user");
+
+        if (userId != null && email != null) {
+            selectClientInfoSql.append(" WHERE user_id = '" + userId + "' AND email = '" + email + "'");
+        } else if (userId != null) {
+            selectClientInfoSql.append(" WHERE user_id = '" + userId + "'");
+        } else if (email != null) {
+            selectClientInfoSql.append(" WHERE email = '" + email + "'");
+        }
+
+        selectClientInfoSql.append(";");
+        PreparedStatement selectClientInfoStmt = con.prepareStatement(selectClientInfoSql.toString());
+        ResultSet results = selectClientInfoStmt.executeQuery();
 
         ClientInfo clientInfo = new ClientInfo();
 
@@ -132,7 +143,7 @@ public class DataFetcherManager {
 
     public static List<Event> getUserEventsInfo(Connection con, String userId) throws SQLException {
         String getTicketSql =
-                "SELECT event.name, user.name, t.ticket_count " +
+                "SELECT event.event_id, event.name, user.name, t.ticket_count " +
                 "FROM event JOIN user ON event.organizer_id = user.user_id " +
                 "JOIN (SELECT event_id, COUNT(event_id) AS ticket_count " +
                 "FROM ticket WHERE user_id = '"+ userId +"' " +
@@ -145,6 +156,7 @@ public class DataFetcherManager {
 
         if (results.next()) {
             Event event = new Event();
+            event.setEventId(results.getInt("event.event_id"));
             event.setName(results.getString("event.name"));
             event.setOrganizer(results.getString("user.name"));
             event.setTicketCount(results.getInt("t.ticket_count"));
@@ -152,6 +164,36 @@ public class DataFetcherManager {
         }
 
         return eventList;
+    }
+
+    public static int getTicketCount(Connection con, String userId, int eventId) throws SQLException {
+        String getTicketCountSql = "SELECT COUNT(*) AS ticket_count FROM ticket WHERE user_id = '"
+                + userId + "' GROUP BY event_id = " + eventId + ";";
+
+        PreparedStatement selectTicketCountStmt = con.prepareStatement(getTicketCountSql);
+        ResultSet results = selectTicketCountStmt.executeQuery();
+
+        int ticketCount = 0;
+        if (results.next()) {
+            ticketCount = results.getInt("ticket_count");
+        }
+
+        return ticketCount;
+    }
+
+    public static int getSearch(Connection con, String userId, int eventId) throws SQLException {
+        String getTicketCountSql = "SELECT COUNT(*) AS ticket_count FROM ticket WHERE user_id = '"
+                + userId + "' GROUP BY event_id = " + eventId + ";";
+
+        PreparedStatement selectTicketCountStmt = con.prepareStatement(getTicketCountSql);
+        ResultSet results = selectTicketCountStmt.executeQuery();
+
+        int ticketCount = 0;
+        if (results.next()) {
+            ticketCount = results.getInt("ticket_count");
+        }
+
+        return ticketCount;
     }
 
 }

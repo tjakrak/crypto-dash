@@ -10,6 +10,8 @@ import cs601.project4.tableobject.Event;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,17 +45,34 @@ public class HomeController {
             if (listEvents.size() > 5) {
                 model.addAttribute("showMore", "true");
             }
-            clientInfo = DataFetcherManager.getClientInfo(connection, clientInfo.getUniqueId());
+//            clientInfo = DataFetcherManager.getClientInfo(connection, clientInfo.getUniqueId());
             model.addAttribute("listEvents", listEvents);
             model.addAttribute("name", clientInfo.getName());
         } catch(SQLException e) {
             e.printStackTrace();
         }
 
+        model.addAttribute("totalPages", 5);
+        model.addAttribute("currentPage", 1);
         return "home";
     }
 
 
+    @PostMapping("/home")
+    public String postHome(@RequestParam("search-bar") String search, Model model, HttpServletRequest req) {
+        Gson gson = new Gson();
+        Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
+        ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
+
+        if (clientInfo == null) { // if the user hasn't logged in to the app
+            req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "1");
+            return "redirect:/login";
+        }
+
+        System.out.println(search);
+
+        return "home";
+    }
 //    @GetMapping("/all-events/{pageNum}")
 //    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
 //                             @Param("sortField") String sortField,

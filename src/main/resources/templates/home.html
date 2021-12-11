@@ -31,9 +31,9 @@
         <div id="inner-body-bg">
             <div id="wrapper-content">
                 <!--search bar here-->
-                <form action="/">
+                <form action="/home" method="post">
                     <div id="search-bar-wrapper">
-                        <input class="search-bar" type="text" placeholder="Search events..">
+                        <input type="text" id="search-bar" name="search-bar" class="search-bar" placeholder="Search events..">
                     </div>
                 </form>
                 <!--list of events here-->
@@ -52,13 +52,13 @@
                         <div th:if = "${showMore == null}">
                             <br />
                         </div>
-                        <li th:if = "${showMore == 'true'}">
-                            <a href="/event">
-                                <div id="show-more-wrapper">
-                                    <h1>Show more...</h1>
-                                </div>
-                            </a>
-                        </li>
+<!--                        <li th:if = "${showMore == 'true'}">-->
+<!--                            <a href="/event">-->
+<!--                                <div id="show-more-wrapper">-->
+<!--                                    <h1>Show more...</h1>-->
+<!--                                </div>-->
+<!--                            </a>-->
+<!--                        </li>-->
                     </ul>
                 </div>
             </div>

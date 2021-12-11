@@ -61,8 +61,8 @@
                         </li>
                     </ul>
                     <h2>How many ticket(s) would you like to get:</h2>
+                    <!--${#numbers.sequence(1, 10)} if we want to get the value from variable: ${#numbers.sequence(1, <var-name>)}-->
                     <select name="number-of-tickets">
-                        <option>Select</option>
                         <option th:each="n : ${#numbers.sequence(1, 10)}" th:value="${n}" th:text="${n}"/>
                     </select>
                     <button id="button-wrapper" type="submit">Get ticket</button>
