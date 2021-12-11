@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class MyTicketController {
+public class TicketTransferController {
 
     @GetMapping("/ticket/my-ticket")
     public String getMyTicket(Model model, HttpServletRequest req) {
