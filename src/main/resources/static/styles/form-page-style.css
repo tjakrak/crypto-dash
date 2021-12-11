@@ -78,6 +78,11 @@ text-area{
     padding-top: 50px;
 }
 
+#main-title-fail{
+    text-align: center;
+    padding-top: 50px;
+}
+
 #form-wrapper{
     margin-top: 40px;
 }

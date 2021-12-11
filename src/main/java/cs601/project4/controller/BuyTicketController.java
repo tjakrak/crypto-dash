@@ -75,6 +75,7 @@ public class BuyTicketController {
         Event event = getEventFromDatabase(eventId);
 
         String responseMsg = "";
+        Boolean isSuccess = false;
         if (event != null) {
             responseMsg = "Sorry, there are only " + event.getTicketAvailable() + " tickets left";
         }
@@ -96,10 +97,12 @@ public class BuyTicketController {
                     updateTicketInDatabase(ticketList.get(i).getTicketId(), buyerId); // update the ticket owner
                 }
                 responseMsg = "Thank you for purchasing with us! Enjoy your upcoming event!";
+                isSuccess = true;
             }
         }
 
         model.addAttribute("responseMsg", responseMsg);
+        model.addAttribute("isSuccess", isSuccess);
 
         return ("ticket-purchase-verified");
     }

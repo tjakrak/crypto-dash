@@ -46,6 +46,7 @@ public class DataFetcherManager {
         ClientInfo clientInfo = new ClientInfo();
 
         if (results.next()) {
+            clientInfo.setUniqueId(userId);
             clientInfo.setName(results.getString("name"));
             clientInfo.setEmail(results.getString("email"));
             clientInfo.setZipcode(results.getString("zipcode"));
@@ -113,7 +114,7 @@ public class DataFetcherManager {
         ResultSet results = selectTicketStmt.executeQuery();
 
         List<Ticket> listOfTickets = new ArrayList<>();
-        if (results.next()) {
+        while (results.next()) {
             Ticket ticket = new Ticket();
             ticket.setTicketId(results.getInt("ticket_id"));
             ticket.setUserId(results.getString("user_id"));
@@ -154,7 +155,7 @@ public class DataFetcherManager {
 
         List<Event> eventList = new ArrayList<>();
 
-        if (results.next()) {
+        while (results.next()) {
             Event event = new Event();
             event.setEventId(results.getInt("event.event_id"));
             event.setName(results.getString("event.name"));
@@ -181,19 +182,41 @@ public class DataFetcherManager {
         return ticketCount;
     }
 
-    public static int getSearch(Connection con, String userId, int eventId) throws SQLException {
-        String getTicketCountSql = "SELECT COUNT(*) AS ticket_count FROM ticket WHERE user_id = '"
-                + userId + "' GROUP BY event_id = " + eventId + ";";
+    public static List<Event> getSearch(Connection con, String searchQuery) throws SQLException {
+        String getSearchSql =
+                "SELECT * FROM event JOIN user ON event.organizer_id = user.user_id " +
+                "WHERE user.name REGEXP '.*ryan.*' OR event.name REGEXP '.*" + searchQuery + ".*' " +
+                "OR event.description REGEXP '.*" + searchQuery + "*.' " +
+                "OR event.address REGEXP '.*" + searchQuery + ".*' " +
+                "OR event.city REGEXP '.*" + searchQuery + "*.' OR event.state REGEXP '.*" + searchQuery + "*.' " +
+                "OR event.zip_code REGEXP '.*" + searchQuery + "*.';";
 
-        PreparedStatement selectTicketCountStmt = con.prepareStatement(getTicketCountSql);
-        ResultSet results = selectTicketCountStmt.executeQuery();
+        PreparedStatement selectSearchStmt = con.prepareStatement(getSearchSql);
+        ResultSet results = selectSearchStmt.executeQuery();
 
-        int ticketCount = 0;
-        if (results.next()) {
-            ticketCount = results.getInt("ticket_count");
+        List<Event> eventList = new ArrayList<>();
+
+        while (results.next()) {
+            Event event = new Event();
+            event.setEventId(results.getInt("event_id"));
+            event.setName(results.getString("name"));
+            event.setStartDate(results.getTimestamp("start_date"));
+            event.setEndDate(results.getTimestamp("end_date"));
+            event.setDescription(results.getString("description"));
+            event.setTicketPrice(results.getInt("ticket_price"));
+            event.setTicketTotal(results.getInt("ticket_total"));
+            event.setTicketSold(results.getInt("ticket_sold"));
+            event.setTicketAvailable(results.getInt("ticket_available"));
+            event.setOrganizer(results.getString("organizer_id"));
+            event.setAddress(results.getString("address"));
+            event.setCity(results.getString("city"));
+            event.setState(results.getString("state"));
+            event.setZipCode(results.getString("zip_code"));
+            event.setFullAddress();
+            eventList.add(event);;
         }
 
-        return ticketCount;
+        return eventList;
     }
 
 }

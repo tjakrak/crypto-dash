@@ -41,19 +41,37 @@ public class LoginController {
         String clientFailToLogin = (String) req.getSession().getAttribute(LoginConstants.IS_FAIL_TO_LOGIN);
 
         if (clientInfoObj != null) {  // ---------------------------------------------- the user already authenticated
+
             return "redirect:/home ";
+
         } else if (clientConfigKeyObj != null && clientFailToLogin.equals("0")) { // -- reset user session
             Boolean verified = slackLoginVerifier(req, sessionId);
             if(!verified) {           // ---------------------------------------------- fail to authenticate user
                 req.getSession().invalidate();
+
                 return "redirect:/login";
+
             } else {                  // ---------------------------------------------- user login successfully
                 clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
-                addNewUserToDb(sessionId, clientInfoObj);
+                boolean isAdded = addNewUserToDb(sessionId, clientInfoObj);
+
+                if (!isAdded) {
+                    Gson gson = new Gson();
+                    ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
+
+                    String userId = clientInfo.getUniqueId();
+                    clientInfo = getClientInfoDatabase(userId);
+
+                    req.getSession().removeAttribute(LoginConstants.CLIENT_INFO_KEY);
+                    req.getSession().setAttribute(LoginConstants.CLIENT_INFO_KEY,  new Gson().toJson(clientInfo));
+                }
+
                 return "redirect:/home";
+
             }
         } else { // the user just visited login page for the first time
             slackLoginPreparer(model, req, sessionId);
+
             return "login";
         }
     }
@@ -64,7 +82,7 @@ public class LoginController {
      * @param sessionId     current session id
      * @param clientInfoObj obj that store various client information
      */
-    private void addNewUserToDb(String sessionId, Object clientInfoObj) {
+    private boolean addNewUserToDb(String sessionId, Object clientInfoObj) {
         try (Connection connection = DBCPDataSource.getConnection()){
             Gson gson = new Gson();
             ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
@@ -77,10 +95,14 @@ public class LoginController {
                 String zipcode = "";
                 DataInsertionManager.insertToUser(connection, userId, name, email, zipcode);
                 DataInsertionManager.insertToUserToSession(connection, userId, sessionId);
+
+                return true;
             }
         } catch(SQLException e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
     /**
@@ -152,6 +174,18 @@ public class LoginController {
         model.addAttribute("isFail", req.getSession().getAttribute(LoginConstants.IS_FAIL_TO_LOGIN));
         // reset to false
         req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "0");
+    }
+
+    private ClientInfo getClientInfoDatabase(String userId) {
+        ClientInfo clientInfo = new ClientInfo();
+
+        try (Connection connection = DBCPDataSource.getConnection()){
+            clientInfo = DataFetcherManager.getClientInfo(connection, userId, null);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return clientInfo;
     }
 
 }

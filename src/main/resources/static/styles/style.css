@@ -130,6 +130,19 @@ header #header-right ul li a:hover{
     display: block;
 }
 
+#address{
+    color: #040404;
+}
+
+#price{
+    color: #040404;
+}
+
+#show-more-wrapper{
+    padding-top: 40px;
+    color: #FFFF;
+}
+
 /* ------------------- Footer ----------------------*/
 #footer-wrapper{
    background:url(../images/header-bg.png) repeat-x;

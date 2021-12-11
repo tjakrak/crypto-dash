@@ -41,19 +41,17 @@ public class HomeController {
 
         try (Connection connection = DBCPDataSource.getConnection()){
             List<Event> listEvents = DataFetcherManager.getEvents(connection,
-                    null, null, 0, false, 5);
-            if (listEvents.size() > 5) {
+                    null, null, 0, false, 0);
+            if (listEvents.size() > 6) {
                 model.addAttribute("showMore", "true");
             }
-//            clientInfo = DataFetcherManager.getClientInfo(connection, clientInfo.getUniqueId());
+
             model.addAttribute("listEvents", listEvents);
             model.addAttribute("name", clientInfo.getName());
         } catch(SQLException e) {
             e.printStackTrace();
         }
 
-        model.addAttribute("totalPages", 5);
-        model.addAttribute("currentPage", 1);
         return "home";
     }
 

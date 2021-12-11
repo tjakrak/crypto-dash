@@ -22,7 +22,8 @@ public class SettingController {
 
     @GetMapping("/user/settings")
     public String getUserSetting(Model model, HttpServletRequest req) {
-        ClientInfo clientInfo = getClientInfo(req);
+        Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
+        ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
 
         if (clientInfo == null) { // if the user hasn't logged in to the app
             req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "1");
@@ -31,11 +32,7 @@ public class SettingController {
 
         String userId = clientInfo.getUniqueId();
 
-        try (Connection connection = DBCPDataSource.getConnection()){
-            clientInfo = DataFetcherManager.getClientInfo(connection, userId, "");
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
+        clientInfo = getClientInfoDatabase(userId);
 
         model.addAttribute("currName", clientInfo.getName());
         model.addAttribute("currEmail", clientInfo.getEmail());
@@ -45,29 +42,36 @@ public class SettingController {
     }
 
     @PostMapping("/user/settings")
-    public String postUserSetting(@ModelAttribute("settingBean") ClientInfo settingBean, HttpServletRequest req) {
-
-        ClientInfo clientInfo = getClientInfo(req);
+    public String postUserSetting(@ModelAttribute("settingBean") ClientInfo settingBean,
+                                  Model model, HttpServletRequest req) {
+        Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
+        ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
 
         if (clientInfo == null) { // if the user hasn't logged in to the app
             req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "1");
+
             return "redirect:/login ";
         }
 
         String name = settingBean.getName();
         String email = settingBean.getEmail();
         String zipcode = settingBean.getZipcode();
+        String userId = clientInfo.getUniqueId();
 
         String validationMsg = validateInput(name, email);
 
         if (validationMsg.equals("validated")) {
-            String userId = clientInfo.getUniqueId();
             updateUserInfoDatabase(name, email, zipcode, userId);
         }
+
+        clientInfo = getClientInfoDatabase(userId);
 
         // update the userinfo in the session attribute
         req.getSession().removeAttribute(LoginConstants.CLIENT_INFO_KEY);
         req.getSession().setAttribute(LoginConstants.CLIENT_INFO_KEY,  new Gson().toJson(clientInfo));
+
+        String responseMsg = "Your changes has been saved!";
+        model.addAttribute("responseMsg", responseMsg);
 
         return "redirect:/user/settings";
     }
@@ -83,8 +87,16 @@ public class SettingController {
     }
 
     // move this to other method
-    private ClientInfo getClientInfo(HttpServletRequest req) {
-        return gson.fromJson((String) req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY), ClientInfo.class);
+    private ClientInfo getClientInfoDatabase(String userId) {
+        ClientInfo clientInfo = new ClientInfo();
+
+        try (Connection connection = DBCPDataSource.getConnection()){
+            clientInfo = DataFetcherManager.getClientInfo(connection, userId, null);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return clientInfo;
     }
 
     private void  updateUserInfoDatabase(String name, String email, String zipcode, String userId) {

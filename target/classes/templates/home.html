@@ -44,21 +44,21 @@
                                 <div id="each-list-wrapper">
                                     <h1 th:text="${event.name}" />
                                     <p id="event-date" th:text="${event.startDate}" />
-                                    <p th:text="${event.fullAddress}" />
-                                    <p th:text="'$' + ${event.ticketPrice}" />
+                                    <p id="address" th:text="${event.fullAddress}" />
+                                    <p id="price" th:text="'$' + ${#numbers.formatDecimal(event.ticketPrice, 0, 'COMMA', 2, 'POINT')}" />
                                 </div>
                             </a>
                         </li>
                         <div th:if = "${showMore == null}">
                             <br />
                         </div>
-<!--                        <li th:if = "${showMore == 'true'}">-->
-<!--                            <a href="/event">-->
-<!--                                <div id="show-more-wrapper">-->
-<!--                                    <h1>Show more...</h1>-->
-<!--                                </div>-->
-<!--                            </a>-->
-<!--                        </li>-->
+                        <li th:if = "${showMore == 'true'}">
+                            <a href="/event">
+                                <div id="show-more-wrapper">
+                                    <h1>Show more...</h1>
+                                </div>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>

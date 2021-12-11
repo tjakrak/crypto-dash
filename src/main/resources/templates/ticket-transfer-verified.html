@@ -31,7 +31,8 @@
         </div>
         <div id="inner-body-bg">
             <div id="wrapper-content">
-                <h1 id="main-title">Transfer Successful</h1>
+                <h1 th:if = "${isSuccess == true}" id="main-title">Purchase Successful</h1>
+                <h1 th:if = "${isSuccess == false}" id="main-title-fail">Purchase Failed</h1>
                 <!--list of events here-->
                 <div id="form-wrapper">
                     <!--action - calling http POST method to /user-settings-->

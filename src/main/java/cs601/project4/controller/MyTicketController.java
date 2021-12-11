@@ -36,6 +36,11 @@ public class MyTicketController {
         }
 
         List<Event> listEvents = getUserEventList(clientInfo.getUniqueId());
+
+        for (int i = 0; i < listEvents.size(); i++) {
+            System.out.println(listEvents.get(i).getName());
+        }
+
         if (listEvents != null) {
             model.addAttribute("listEvents", listEvents);
         }
@@ -87,7 +92,10 @@ public class MyTicketController {
         List<Ticket> ticketList = getAvailableTickets(userId, ticketQty);
         updateTicket(ticketList, recipientId);
 
-        model.addAttribute("responseMsg", "hi");
+        String responseMsg = "Ticket has been transfered";
+        boolean isSuccess = true;
+        model.addAttribute("responseMsg", responseMsg);
+        model.addAttribute("isSuccess", isSuccess);
 
         return "ticket-transfer-verified";
     }

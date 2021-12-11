@@ -26,9 +26,7 @@
                 </div>
             </header>
         </div>
-        <div id="outer-top-body-bg">
-            <h1>Welcome <span th:text="${name}"></span>!</h1>
-        </div>
+        <div id="outer-top-body-bg"></div>
         <div id="inner-body-bg">
             <div id="wrapper-content">
                 <!--action - calling http POST method to /user-settings-->
@@ -57,7 +55,7 @@
                         </li>
                         <li>
                             <h2>Ticket Price:</h2>
-                            <p th:text="'$' + ${event.ticketPrice}"/>
+                            <p th:text="'$' + ${#numbers.formatDecimal(event.ticketPrice, 1, 'COMMA', 2, 'POINT')}"/>
                         </li>
                     </ul>
                     <h2>How many ticket(s) would you like to get:</h2>
