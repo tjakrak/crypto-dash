@@ -13,7 +13,7 @@
             <header>
                 <div id="header-left">
                     <!--upload logo to the page-->
-                    <a href="/home"><img src="../static/images/eventbase.png" width="150" th:src="@{../images/eventbase.png}" /></a>
+                    <a href="/home"><img id="logo" src="../static/images/NoStayHome.png" width="200" th:src="@{../images/NoStayHome.png}" /></a>
                 </div>
                 <div id="header-right">
                     <!--menu bar-->
@@ -32,6 +32,7 @@
                 <h1 id="main-title">Create Event</h1>
                 <!--list of events here-->
                 <div id="form-content-wrapper">
+                    <p id="response-msg" th:text="${responseMsg}" style="color:red"></p>
                     <!--action - calling http POST method to /user-settings-->
                     <!--th:object - calling an object that is stored in model attribute, in this case the object is SettingBean-->
                     <form th:action="@{/event/create}" method="post">

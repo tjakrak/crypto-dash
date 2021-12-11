@@ -13,7 +13,7 @@
             <header>
                 <div id="header-left">
                     <!--upload logo to the page-->
-                    <a href="/"><img src="../static/images/eventbase.png" width="150" th:src="@{images/eventbase.png}" /></a>
+                    <a href="/"><img src="../static/images/NoStayHome.png" width="200" th:src="@{images/NoStayHome.png}" /></a>
                 </div>
                 <div id="header-right">
                 </div>
@@ -26,10 +26,10 @@
             <div id="wrapper-content">
                 <h1>Let's get the party started!</h1>
                 <br />
-                <div th:if = "${isFail == null}">
+                <div th:if="${isFail == null}">
                     <br />
                 </div>
-                <div th:if = "${isFail == '1'}">
+                <div th:if="${isFail == '1'}">
                     <p style="color:red">You must log in to continue</p>
                 </div>
                 <br />

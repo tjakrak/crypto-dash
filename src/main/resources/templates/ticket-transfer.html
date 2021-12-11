@@ -13,7 +13,7 @@
             <header>
                 <div id="header-left">
                     <!--upload logo to the page-->
-                    <a href="/home"><img src="../static/images/eventbase.png" width="150" th:src="@{../../images/eventbase.png}" /></a>
+                    <a href="/home"><img src="../static/images/NoStayHome.png" width="200" th:src="@{../../images/NoStayHome.png}" /></a>
                 </div>
                 <div id="header-right">
                     <!--menu bar-->
@@ -44,13 +44,13 @@
                             </ul>
                             <!--value-->
                             <ul id="value-wrapper">
-                                <li>
+                                <li id="ticket-transfer-value-li">
                                     <select name="ticket-qty">
                                         <option th:each="n : ${#numbers.sequence(1, maxTix)}" th:value="${n}" th:text="${n}"/>
                                     </select>
                                 </li>
                                 <li>
-                                    <input type="text" id="recipient-email" name="recipient-email" />
+                                    <input class="ticket-transfer-input-box" type="text" id="recipient-email" name="recipient-email" />
                                 </li>
                             </ul>
                         </div>

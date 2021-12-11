@@ -93,7 +93,7 @@ public class EventController {
             @RequestParam("state") String state,
             @RequestParam("zipcode") String zipcode,
             @RequestParam("description") String description,
-            HttpServletRequest req) {
+            Model model, HttpServletRequest req) {
 
         Gson gson = new Gson();
         Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
@@ -108,12 +108,13 @@ public class EventController {
             Timestamp startTimeStamp = dbDateFormatter(startDate);
             Timestamp endTimeStamp = dbDateFormatter(endDate);
 
-            String response = validateInput(eventName, startTimeStamp,
+            String responseMsg = validateInput(eventName, startTimeStamp,
                     endTimeStamp, address, city, state, zipcode);
             String userId = clientInfo.getUniqueId();
 
-            if (response != null) { // if the user did not put the correct information
-                return "redirect:/event/create";
+            if (responseMsg != null) { // if the user did not put the correct information
+                model.addAttribute("responseMsg", responseMsg);
+                return "event-create";
             }
 
             double ticketPrice = Double.parseDouble(ticketPriceStr);
@@ -138,7 +139,10 @@ public class EventController {
             System.out.println(e);
         }
 
-        return "event-create";
+        String responseMsg = "Event created successfully";
+        model.addAttribute("responseMsg", responseMsg);
+
+        return "event-create-verified";
     }
 
     /**

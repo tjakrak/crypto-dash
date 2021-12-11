@@ -13,7 +13,7 @@
             <header>
                 <div id="header-left">
                     <!--upload logo to the page-->
-                    <a href="/home"><img src="../static/images/eventbase.png" width="150" th:src="@{../images/eventbase.png}" /></a>
+                    <a href="/home"><img src="../static/images/NoStayHome.png" width="200" th:src="@{../images/NoStayHome.png}" /></a>
                 </div>
                 <div id="header-right">
                     <!--menu bar-->
@@ -47,12 +47,12 @@
                             <!--th:value - mapped from setting controller mode attribute-->
                             <!--name - has to be the same as variable in SettingBean-->
                             <li>
-                                <input type="text" maxlength = "40" id="name" name="name" th:value="${currName}" />
+                                <input class="setting-input-box" type="text" maxlength = "40" id="name" name="name" th:value="${currName}" />
                             <li>
-                                <input type="text" maxlength = "40" id="email" name="email" th:value="${currEmail}" />
+                                <input class="setting-input-box" type="text" maxlength = "40" id="email" name="email" th:value="${currEmail}" />
                             </li>
                             <li>
-                                <input type="text" maxlength = "20" id="zipcode" name="zipcode" th:value="${currZipcode}" />
+                                <input class="setting-input-box" type="text" maxlength = "20" id="zipcode" name="zipcode" th:value="${currZipcode}" />
                             </li>
                         </ul>
                         <button id="button-wrapper" type="submit">Submit</button>
