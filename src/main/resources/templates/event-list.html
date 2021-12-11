@@ -4,6 +4,7 @@
         <link href="../static/styles/style.css" th:href="@{../styles/style.css}" rel="stylesheet" />
         <link href="../static/styles/form-page-style.css" th:href="@{../styles/form-page-style.css}" rel="stylesheet" />
         <link href="../static/styles/all-list-style.css" th:href="@{../styles/all-list-style.css}" rel="stylesheet" />
+        <link href="../static/styles/test.css" th:href="@{../styles/test.css}" rel="stylesheet" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
         <meta charset="UTF-8">
         <title>Create Event</title>
@@ -72,10 +73,15 @@
 <!--                    </div>-->
 <!--                </div>-->
 
-                <div class = "row col-sm-10">
+<!--                <div class = "row col-sm-10">-->
                     <div class = "col-sm-2">
                         Total Rows: 30
                     </div>
+                    <div class="col-sm-1">
+                        <a href="@{'/page/' + ${totalPages}}"><</a>
+                        <!--                        <span>Last</span>-->
+                    </div>
+
                     <div class = "col-sm-1">
                         <span th:each="i: ${#numbers.sequence(1, totalPages)}">
                             <a href="@{'/page/' + ${i}}">1</a>
@@ -91,15 +97,11 @@
                         </span>
                     </div>
                     <div class = "col-sm-1">
-                        <a href="@{'/page/' + ${currentPage + 1}}">Next</a>
+                        <a href="@{'/page/' + ${currentPage + 1}}">></a>
 <!--                        <span>Next</span>-->
                     </div>
 
-                    <div class="col-sm-1">
-                        <a href="@{'/page/' + ${totalPages}}">Last</a>
-<!--                        <span>Last</span>-->
-                    </div>
-                </div>
+<!--                </div>-->
 
 
             </div>

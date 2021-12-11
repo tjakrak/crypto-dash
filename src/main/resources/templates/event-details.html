@@ -34,7 +34,7 @@
                 <form th:action="@{/ticket/{id}/purchase(id=${event.eventId})}" method="post">
                     <!--value-->
                     <h1 th:text="${event.name}" ></h1>
-                    <p id="organizer"><b>Organizer:</b>&nbsp;<span th:text="${event.organizer}"></span></p>
+                    <p id="organizer"><b>Organizer:</b>&nbsp;<span th:text="${event.organizerName}"></span></p>
                     <ul id="value-wrapper" th:object="${event}">
                         <!--th:value - mapped from setting controller mode attribute-->
                         <!--name - has to be the same as variable in SettingBean-->

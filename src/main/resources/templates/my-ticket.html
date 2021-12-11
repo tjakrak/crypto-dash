@@ -42,7 +42,7 @@
                         <hr>
                         <tr th:each="event : ${listEvents}">
                             <td><p th:text="${event.name}" /></td>
-                            <td><p th:text="${event.organizer}" /></td>
+                            <td><p th:text="${event.organizerName}" /></td>
                             <td><p th:text="${event.ticketCount}" /></td>
                             <td>
                                 <a th:href="@{/ticket/{id}/transfer(id=${event.eventId})}">Transfer</a>

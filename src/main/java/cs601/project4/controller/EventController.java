@@ -42,7 +42,7 @@ public class EventController {
 
         try (Connection connection = DBCPDataSource.getConnection()){
             List<Event> listEvents = DataFetcherManager.getEvents(connection,
-                    null, null, id, false, 0);
+                    null, null, id, false, 0, 0);
             if (listEvents.size() == 1) {
                 Event event = listEvents.get(0);
                 model.addAttribute("event", event);
@@ -142,17 +142,16 @@ public class EventController {
     }
 
     /**
-     * A helper method to get current date in Timestamp and format the date to a String
-     * with proper format to be compatible with HTML datetime-local format.
-     * Convert: "yyyy-MM-dd hh:mm:ss" to "yyyy-MM-ddTHH:mm"
-     *          "2021-12-12 10:30:00" to "2021-12-12T10:30"
+     *      * A helper method to get current date in Timestamp and format the date to a String
+     *      * with proper format to be compatible with HTML datetime-local format.
+     *      * Convert: "yyyy-MM-dd hh:mm:ss" to "yyyy-MM-ddTHH:mm"
+     *      *          "2021-12-12 10:30:00" to "2021-12-12T10:30"
      */
     private String getCurrTimeInString() {
         Timestamp currTime = new Timestamp(System.currentTimeMillis());
         String currTimeStr = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(currTime);
         StringBuilder newTimeFormat = new StringBuilder(currTimeStr);
         newTimeFormat.setCharAt(10, 'T');
-//        System.out.println(newTimeFormat);
 
         return newTimeFormat.toString();
     }
@@ -262,7 +261,7 @@ public class EventController {
     private int getEventId(String userId) {
         try (Connection connection = DBCPDataSource.getConnection()){
             List<Event> listEvents = DataFetcherManager.getEvents(connection,
-                    userId, null, 0, true, 1);
+                    userId, null, 0, true, 1, 0);
             if (listEvents.size() == 1) {
                 Event event = listEvents.get(0);
                 return event.getEventId();

@@ -93,6 +93,7 @@ header #header-right ul li a:hover{
 
 #event-list-content-wrapper{
     margin-top: 20px;
+    height: 920px;
 }
 
 #event-list-content-wrapper #event-list{
@@ -141,6 +142,27 @@ header #header-right ul li a:hover{
 #show-more-wrapper{
     padding-top: 40px;
     color: #FFFF;
+}
+
+#pagination-wrapper{
+    margin-top: 40px;
+    text-align: center;
+    margin-right: auto;
+    margin-left: auto;
+    position: relative;
+}
+
+.pagination{
+    display: inline-block;
+}
+
+.pagination .prev-num-next{
+    font-size: 70px;
+    color: #FFFF;
+    text-decoration: none;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-weight: 900;
 }
 
 /* ------------------- Footer ----------------------*/

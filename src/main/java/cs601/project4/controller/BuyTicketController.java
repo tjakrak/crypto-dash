@@ -37,11 +37,7 @@ public class BuyTicketController {
             return "redirect:/login";
         }
 
-        if (numOfTickets.equals("Select")) {
-            String response = "Please put a number of ticket that you would like to buy";
-        }
-
-        double price = 0.00;
+        double price = 0.0;
         Event event = getEventFromDatabase(eventId);
         if (event != null) {
             price = event.getTicketPrice();
@@ -75,7 +71,7 @@ public class BuyTicketController {
         Event event = getEventFromDatabase(eventId);
 
         String responseMsg = "";
-        Boolean isSuccess = false;
+        boolean isSuccess = false;
         if (event != null) {
             responseMsg = "Sorry, there are only " + event.getTicketAvailable() + " tickets left";
         }
@@ -89,6 +85,7 @@ public class BuyTicketController {
 
             if (sellerId.equals(buyerId)) {
                 responseMsg = "Sorry, cannot process the transaction because you are the organizer of this event.";
+                System.out.println(responseMsg);
             } else {
                 updateEventInDatabase(eventId, ticketSold, ticketAvailable); // update the ticket amount in db
                 List<Ticket> ticketList = getAvailableTickets(sellerId, numOfTicket);
@@ -111,7 +108,7 @@ public class BuyTicketController {
         Event event = null;
         try (Connection connection = DBCPDataSource.getConnection()){
             List<Event> listEvents = DataFetcherManager.getEvents(connection,
-                    null, null, eventId, false, 0);
+                    null, null, eventId, false, 0, 0);
             if (listEvents.size() == 1) {
                 event = listEvents.get(0);
             }
@@ -133,10 +130,10 @@ public class BuyTicketController {
         Event event;
         try (Connection connection = DBCPDataSource.getConnection()){
             List<Event> listEvents = DataFetcherManager.getEvents(connection,
-                    null, null, eventId, false, 0);
+                    null, null, eventId, false, 0, 0);
             if (listEvents.size() == 1) {
                 event = listEvents.get(0);
-                return event.getOrganizer();
+                return event.getOrganizerId();
             }
         } catch(SQLException e) {
             e.printStackTrace();
@@ -169,5 +166,5 @@ public class BuyTicketController {
             e.printStackTrace();
         }
     }
-    
+
 }

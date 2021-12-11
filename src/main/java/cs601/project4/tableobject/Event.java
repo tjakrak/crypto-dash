@@ -12,7 +12,8 @@ public class Event {
     private int ticketTotal;
     private int ticketSold;
     private int ticketAvailable;
-    private String organizer;
+    private String organizerId;
+    private String organizerName;
     private String address;
     private String city;
     private String state;
@@ -88,12 +89,20 @@ public class Event {
         this.ticketAvailable = ticketAvailable;
     }
 
-    public String getOrganizer() {
-        return organizer;
+    public String getOrganizerId() {
+        return organizerId;
     }
 
-    public void setOrganizer(String organizer) {
-        this.organizer = organizer;
+    public void setOrganizerId(String organizerId) {
+        this.organizerId = organizerId;
+    }
+
+    public String getOrganizerName() {
+        return organizerName;
+    }
+
+    public void setOrganizerName(String organizerName) {
+        this.organizerName = organizerName;
     }
 
     public String getAddress() {

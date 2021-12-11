@@ -56,7 +56,7 @@ public class DataFetcherManager {
     }
 
     public static List<Event> getEvents(Connection con, String organizerId, String zipcode,
-                                        int eventId, Boolean isDescending, int size) throws SQLException {
+                                        int eventId, Boolean isDescending, int limit, int offset) throws SQLException {
         StringBuffer selectEventSql = new StringBuffer();
         selectEventSql.append("SELECT * FROM event JOIN user ON event.organizer_id = user.user_id");
         //String selectEventSql = "SELECT * FROM event;";
@@ -75,8 +75,12 @@ public class DataFetcherManager {
             selectEventSql.append(" ORDER BY event_id DESC");
         }
 
-        if(size > 0) {
-            selectEventSql.append(" LIMIT " + size);
+        if (limit > 0) {
+            selectEventSql.append(" LIMIT " + limit);
+        }
+
+        if (offset > 0) {
+            selectEventSql.append(" OFFSET " + offset);
         }
 
         selectEventSql.append(";");
@@ -96,7 +100,8 @@ public class DataFetcherManager {
             event.setTicketTotal(results.getInt("ticket_total"));
             event.setTicketSold(results.getInt("ticket_sold"));
             event.setTicketAvailable(results.getInt("ticket_available"));
-            event.setOrganizer(results.getString("user.name"));
+            event.setOrganizerId(results.getString("organizer_id"));
+            event.setOrganizerName(results.getString("user.name"));
             event.setAddress(results.getString("address"));
             event.setCity(results.getString("city"));
             event.setState(results.getString("state"));
@@ -159,7 +164,7 @@ public class DataFetcherManager {
             Event event = new Event();
             event.setEventId(results.getInt("event.event_id"));
             event.setName(results.getString("event.name"));
-            event.setOrganizer(results.getString("user.name"));
+            event.setOrganizerName(results.getString("user.name"));
             event.setTicketCount(results.getInt("t.ticket_count"));
             eventList.add(event);
         }
@@ -182,16 +187,35 @@ public class DataFetcherManager {
         return ticketCount;
     }
 
-    public static List<Event> getSearch(Connection con, String searchQuery) throws SQLException {
-        String getSearchSql =
-                "SELECT * FROM event JOIN user ON event.organizer_id = user.user_id " +
-                "WHERE user.name REGEXP '.*ryan.*' OR event.name REGEXP '.*" + searchQuery + ".*' " +
-                "OR event.description REGEXP '.*" + searchQuery + "*.' " +
-                "OR event.address REGEXP '.*" + searchQuery + ".*' " +
-                "OR event.city REGEXP '.*" + searchQuery + "*.' OR event.state REGEXP '.*" + searchQuery + "*.' " +
-                "OR event.zip_code REGEXP '.*" + searchQuery + "*.';";
+    public static List<Event> getSearch(Connection con, String searchQuery, int limit, int offset) throws SQLException {
 
-        PreparedStatement selectSearchStmt = con.prepareStatement(getSearchSql);
+        searchQuery = (searchQuery == null || searchQuery.equals("")) ? searchQuery : searchQuery + ".*";
+        searchQuery = searchQuery.toLowerCase();
+
+        StringBuffer getSearchSql = new StringBuffer();
+        getSearchSql.append(
+                "SELECT * FROM event JOIN user ON event.organizer_id = user.user_id " +
+                "WHERE LOWER(user.name) REGEXP '.*" + searchQuery +"' " +
+                "OR LOWER(event.name) REGEXP '.*" + searchQuery + "' " +
+                "OR LOWER(event.description) REGEXP '.*" + searchQuery + "' " +
+                "OR LOWER(event.address) REGEXP '.*" + searchQuery + "' " +
+                "OR LOWER(event.city) REGEXP '.*" + searchQuery + "' " +
+                "OR LOWER(event.state) REGEXP '.*" + searchQuery + "' " +
+                "OR LOWER(event.zip_code) REGEXP '.*" + searchQuery + "'"
+        );
+
+        if (limit > 0) {
+            getSearchSql.append(" LIMIT " + limit);
+        }
+
+        if (offset > 0) {
+            System.out.println("here");
+            getSearchSql.append(" OFFSET " + offset);
+        }
+
+        getSearchSql.append(";");
+
+        PreparedStatement selectSearchStmt = con.prepareStatement(getSearchSql.toString());
         ResultSet results = selectSearchStmt.executeQuery();
 
         List<Event> eventList = new ArrayList<>();
@@ -207,7 +231,8 @@ public class DataFetcherManager {
             event.setTicketTotal(results.getInt("ticket_total"));
             event.setTicketSold(results.getInt("ticket_sold"));
             event.setTicketAvailable(results.getInt("ticket_available"));
-            event.setOrganizer(results.getString("user.name"));
+            event.setOrganizerId(results.getString("organizer_id"));
+            event.setOrganizerName(results.getString("user.name"));
             event.setAddress(results.getString("address"));
             event.setCity(results.getString("city"));
             event.setState(results.getString("state"));
