@@ -10,6 +10,7 @@ import cs601.project4.tableobject.Event;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -55,7 +56,6 @@ public class HomeController {
         return "home";
     }
 
-
     @PostMapping("/home")
     public String postHome(@RequestParam("search-bar") String search, Model model, HttpServletRequest req) {
         Gson gson = new Gson();
@@ -71,10 +71,10 @@ public class HomeController {
 
         return "home";
     }
-//    @GetMapping("/all-events/{pageNum}")
-//    public String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
-//                             @Param("sortField") String sortField,
-//                             HttpServletRequest req) {
-//        return "/";
-//    }
+
+    @GetMapping("/home/{pageNum}")
+    public String getEventPage(@PathVariable(name = "pageNum") int pageNum,
+                               Model model, HttpServletRequest req) {
+        return "/";
+    }
 }

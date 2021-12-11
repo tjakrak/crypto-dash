@@ -60,4 +60,15 @@ p{
     align-text: center;
 }
 
+#start-end-date li{
+    display: inline-block;
+    margin-left: 70px;
+    margin-right: 70px;
+    margin-top: -10px;
+}
+
+#organizer{
+    margin-top: 20px;
+}
+
 

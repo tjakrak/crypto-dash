@@ -47,7 +47,6 @@ public class EventController {
                 Event event = listEvents.get(0);
                 model.addAttribute("event", event);
             }
-            model.addAttribute("name", clientInfo.getName());
         } catch(SQLException e) {
             e.printStackTrace();
         }

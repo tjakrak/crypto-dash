@@ -37,10 +37,6 @@ public class MyTicketController {
 
         List<Event> listEvents = getUserEventList(clientInfo.getUniqueId());
 
-        for (int i = 0; i < listEvents.size(); i++) {
-            System.out.println(listEvents.get(i).getName());
-        }
-
         if (listEvents != null) {
             model.addAttribute("listEvents", listEvents);
         }

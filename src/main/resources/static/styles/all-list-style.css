@@ -1,0 +1,26 @@
+/*
+#outer-ul{
+    list-style: none;
+}*/
+#inner-body-bg{
+    max-width: 90%;
+}
+
+#table-wrapper{
+    margin-top: -10px;
+}
+
+table{
+    width: 100%;
+}
+
+table td{
+  border: 1px solid black;
+  padding: 10px 80px 10px 10px;
+}
+
+hr{
+    margin-top: -10px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+}

@@ -58,7 +58,7 @@ public class DataFetcherManager {
     public static List<Event> getEvents(Connection con, String organizerId, String zipcode,
                                         int eventId, Boolean isDescending, int size) throws SQLException {
         StringBuffer selectEventSql = new StringBuffer();
-        selectEventSql.append("SELECT * FROM event");
+        selectEventSql.append("SELECT * FROM event JOIN user ON event.organizer_id = user.user_id");
         //String selectEventSql = "SELECT * FROM event;";
 
         if (zipcode != null && eventId != 0) {
@@ -96,7 +96,7 @@ public class DataFetcherManager {
             event.setTicketTotal(results.getInt("ticket_total"));
             event.setTicketSold(results.getInt("ticket_sold"));
             event.setTicketAvailable(results.getInt("ticket_available"));
-            event.setOrganizer(results.getString("organizer_id"));
+            event.setOrganizer(results.getString("user.name"));
             event.setAddress(results.getString("address"));
             event.setCity(results.getString("city"));
             event.setState(results.getString("state"));
@@ -207,7 +207,7 @@ public class DataFetcherManager {
             event.setTicketTotal(results.getInt("ticket_total"));
             event.setTicketSold(results.getInt("ticket_sold"));
             event.setTicketAvailable(results.getInt("ticket_available"));
-            event.setOrganizer(results.getString("organizer_id"));
+            event.setOrganizer(results.getString("user.name"));
             event.setAddress(results.getString("address"));
             event.setCity(results.getString("city"));
             event.setState(results.getString("state"));
