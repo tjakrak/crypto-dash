@@ -41,7 +41,9 @@
                         </tr>
                         <hr>
                         <tr th:each="event : ${listEvents}">
-                            <td><p th:text="${event.name}" /></td>
+                            <td>
+                                <a th:href="@{/event/{id}(id=${event.eventId})}"><p th:text="${event.name}" /></a>
+                            </td>
                             <td><p th:text="${event.organizerName}" /></td>
                             <td><p th:text="${event.ticketCount}" /></td>
                             <td>

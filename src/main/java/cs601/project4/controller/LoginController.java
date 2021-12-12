@@ -180,7 +180,7 @@ public class LoginController {
         ClientInfo clientInfo = new ClientInfo();
 
         try (Connection connection = DBCPDataSource.getConnection()){
-            clientInfo = DataFetcherManager.getClientInfo(connection, userId, null);
+            clientInfo = DataFetcherManager.getClientInfo(connection, userId);
         } catch(SQLException e) {
             e.printStackTrace();
         }

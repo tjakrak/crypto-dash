@@ -88,10 +88,11 @@ public class TicketPurchaseController {
                 System.out.println(responseMsg);
             } else {
                 updateEventInDatabase(eventId, ticketSold, ticketAvailable); // update the ticket amount in db
-                List<Ticket> ticketList = getAvailableTickets(sellerId, numOfTicket);
+                List<Ticket> ticketList = getAvailableTickets(sellerId, eventId, numOfTicket);
                 for (int i = 0; i < numOfTicket; i++) {
-                    insertTransactionDatabase(eventId, buyerId, sellerId); // record transaction in the db
-                    updateTicketInDatabase(ticketList.get(i).getTicketId(), buyerId); // update the ticket owner
+                    int ticketId = ticketList.get(i).getTicketId();
+                    insertTransactionDatabase(ticketId, buyerId, sellerId); // record transaction in the db
+                    updateTicketInDatabase(ticketId, buyerId); // update the ticket owner
                 }
                 responseMsg = "Thank you for purchasing with us! Enjoy your upcoming event!";
                 isSuccess = true;
@@ -149,10 +150,10 @@ public class TicketPurchaseController {
         }
     }
 
-    private List<Ticket> getAvailableTickets(String userId, int size) {
+    private List<Ticket> getAvailableTickets(String userId, int eventId, int size) {
         List<Ticket> listTickets = null;
         try (Connection connection = DBCPDataSource.getConnection()){
-            listTickets = DataFetcherManager.getTickets(connection, userId, false, size);
+            listTickets = DataFetcherManager.getTickets(connection, userId, eventId, false, size);
         } catch(SQLException e) {
             e.printStackTrace();
         }

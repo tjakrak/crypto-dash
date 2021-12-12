@@ -71,8 +71,8 @@ public class DataInsertionManager {
 
         insertTransactionStmt.setTimestamp(1, transactionDate);
         insertTransactionStmt.setInt(2, ticketId);
-        insertTransactionStmt.setString(4, buyerId);
-        insertTransactionStmt.setString(5, sellerId);
+        insertTransactionStmt.setString(3, buyerId);
+        insertTransactionStmt.setString(4, sellerId);
 
         insertTransactionStmt.executeUpdate();
     }

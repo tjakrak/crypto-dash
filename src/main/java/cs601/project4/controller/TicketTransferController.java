@@ -69,7 +69,7 @@ public class TicketTransferController {
     public String postTicketTransfer(
             @PathVariable(value = "id") int eventId,
             @RequestParam(value = "ticket-qty") String ticketQtyStr,
-            @RequestParam(value = "email") String recipientEmail,
+            @RequestParam(value = "recipient-email") String recipientEmail,
             Model model, HttpServletRequest req) {
         Gson gson = new Gson();
         Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
@@ -85,10 +85,11 @@ public class TicketTransferController {
         ClientInfo recipientInfo = getRecipientId(recipientEmail);
         String recipientId = recipientInfo.getUniqueId();
 
-        List<Ticket> ticketList = getAvailableTickets(userId, ticketQty);
+        List<Ticket> ticketList = getAvailableTickets(userId, eventId, ticketQty);
+
         updateTicket(ticketList, recipientId);
 
-        String responseMsg = "Ticket has been transfered";
+        String responseMsg = "Ticket has been transferred";
         boolean isSuccess = true;
         model.addAttribute("responseMsg", responseMsg);
         model.addAttribute("isSuccess", isSuccess);
@@ -118,10 +119,10 @@ public class TicketTransferController {
         return ticketCount;
     }
 
-    private List<Ticket> getAvailableTickets(String userId, int size) {
+    private List<Ticket> getAvailableTickets(String userId, int eventId, int size) {
         List<Ticket> listTickets = null;
         try (Connection connection = DBCPDataSource.getConnection()){
-            listTickets = DataFetcherManager.getTickets(connection, userId, false, size);
+            listTickets = DataFetcherManager.getTickets(connection, userId, eventId, false, size);
         } catch(SQLException e) {
             e.printStackTrace();
         }
@@ -131,7 +132,7 @@ public class TicketTransferController {
     private ClientInfo getRecipientId(String email) {
         ClientInfo clientInfo = new ClientInfo();
         try (Connection connection = DBCPDataSource.getConnection()){
-            clientInfo = DataFetcherManager.getClientInfo(connection, null, email);
+            clientInfo = DataFetcherManager.getClientIdByEmail(connection, email);
         } catch(SQLException e) {
             e.printStackTrace();
         }

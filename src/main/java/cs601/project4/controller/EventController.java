@@ -27,6 +27,9 @@ import java.util.regex.Pattern;
 @Controller
 public class EventController {
 
+    /**
+     * A GET method for specific event
+     */
     @GetMapping("/event/{id}")
     public String getEvent(@PathVariable(value = "id") int id,
                            Model model, HttpServletRequest req) {
@@ -54,7 +57,6 @@ public class EventController {
         return("event-details");
     }
 
-
     @GetMapping("/event/create")
     public String getCreateEvent(Model model, HttpServletRequest req) {
 
@@ -76,7 +78,6 @@ public class EventController {
 
         return "event-create";
     }
-
 
     /**
      * A POST method to parse data from the user input and store it in MySql database
@@ -146,10 +147,10 @@ public class EventController {
     }
 
     /**
-     *      * A helper method to get current date in Timestamp and format the date to a String
-     *      * with proper format to be compatible with HTML datetime-local format.
-     *      * Convert: "yyyy-MM-dd hh:mm:ss" to "yyyy-MM-ddTHH:mm"
-     *      *          "2021-12-12 10:30:00" to "2021-12-12T10:30"
+     * A helper method to get current date in Timestamp and format the date to a String
+     * with proper format to be compatible with HTML datetime-local format.
+     * Convert: "yyyy-MM-dd hh:mm:ss" to "yyyy-MM-ddTHH:mm"
+     *          "2021-12-12 10:30:00" to "2021-12-12T10:30"
      */
     private String getCurrTimeInString() {
         Timestamp currTime = new Timestamp(System.currentTimeMillis());
@@ -159,7 +160,6 @@ public class EventController {
 
         return newTimeFormat.toString();
     }
-
 
     /**
      * A helper method to convert a date in String to a date in Timestamp

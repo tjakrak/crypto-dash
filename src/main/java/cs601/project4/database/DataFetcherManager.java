@@ -27,19 +27,16 @@ public class DataFetcherManager {
         }
     }
 
-    public static ClientInfo getClientInfo(Connection con, String userId, String email) throws SQLException {
+    public static ClientInfo getClientInfo(Connection con, String userId) throws SQLException {
         StringBuffer selectClientInfoSql = new StringBuffer();
         selectClientInfoSql.append("SELECT * FROM user");
 
-        if (userId != null && email != null) {
-            selectClientInfoSql.append(" WHERE user_id = '" + userId + "' AND email = '" + email + "'");
-        } else if (userId != null) {
+        if (userId != null) {
             selectClientInfoSql.append(" WHERE user_id = '" + userId + "'");
-        } else if (email != null) {
-            selectClientInfoSql.append(" WHERE email = '" + email + "'");
         }
 
         selectClientInfoSql.append(";");
+
         PreparedStatement selectClientInfoStmt = con.prepareStatement(selectClientInfoSql.toString());
         ResultSet results = selectClientInfoStmt.executeQuery();
 
@@ -54,6 +51,32 @@ public class DataFetcherManager {
 
         return clientInfo;
     }
+
+    public static ClientInfo getClientIdByEmail(Connection con, String email) throws SQLException {
+        StringBuffer selectClientInfoSql = new StringBuffer();
+        selectClientInfoSql.append("SELECT * FROM user");
+
+        if (email != null) {
+            selectClientInfoSql.append(" WHERE email = '" + email + "'");
+        }
+
+        selectClientInfoSql.append(";");
+
+        PreparedStatement selectClientInfoStmt = con.prepareStatement(selectClientInfoSql.toString());
+        ResultSet results = selectClientInfoStmt.executeQuery();
+
+        ClientInfo clientInfo = new ClientInfo();
+
+        if (results.next()) {
+            clientInfo.setUniqueId(results.getString("user_id"));
+            clientInfo.setName(results.getString("name"));
+            clientInfo.setEmail(results.getString("email"));
+            clientInfo.setZipcode(results.getString("zipcode"));
+        }
+
+        return clientInfo;
+    }
+
 
     public static List<Event> getEvents(Connection con, String organizerId, String zipcode,
                                         int eventId, Boolean isDescending, int limit, int offset) throws SQLException {
@@ -113,8 +136,9 @@ public class DataFetcherManager {
         return listOfEvents;
     }
 
-    public static List<Ticket> getTickets(Connection con, String userId, boolean isDescending, int size) throws SQLException {
-        String selectTicketSql = "SELECT * FROM ticket WHERE user_id = '" + userId + "' ORDER BY ticket_id ASC LIMIT " + size +";";
+    public static List<Ticket> getTickets(Connection con, String userId, int eventId, boolean isDescending, int size) throws SQLException {
+        String selectTicketSql = "SELECT * FROM ticket WHERE user_id = '" + userId + "' AND event_id = " + eventId +
+                " ORDER BY ticket_id ASC LIMIT " + size +";";
         PreparedStatement selectTicketStmt = con.prepareStatement(selectTicketSql);
         ResultSet results = selectTicketStmt.executeQuery();
 
