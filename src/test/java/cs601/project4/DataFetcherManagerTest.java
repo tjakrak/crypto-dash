@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-public class HttpFetcherTest {
+public class DataFetcherManagerTest {
 
     @Test
     public void isUserIdExistTrue() {
