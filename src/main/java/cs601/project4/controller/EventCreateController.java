@@ -98,7 +98,7 @@ public class EventCreateController {
                     description, ticketPrice, ticketTotal, 0, userId,
                     address, city, state, zipcode);
 
-            int eventId = getEventId(clientInfo.getUniqueId()); // Get the eventId of the newly created event
+            int eventId = getEventIdByUserIdFromDatabase(clientInfo.getUniqueId()); // Get the eventId of the newly created event
 
             if (eventId != 0) { // Generate and add tickets for the event to the database
                 for (int i = 0; i < ticketTotal; i++) {
@@ -231,7 +231,7 @@ public class EventCreateController {
      *
      * @param userId a unique id of the user
      */
-    private int getEventId(String userId) {
+    private int getEventIdByUserIdFromDatabase(String userId) {
         try (Connection connection = DBCPDataSource.getConnection()){
             List<Event> listEvents = DataFetcherManager.getEvents(connection,
                     userId, null, 0, true, 1, 0);

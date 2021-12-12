@@ -24,19 +24,19 @@ import java.util.Map;
 public class LoginController {
 
     /**
-     * a method to handle GET login request
+     * A method to handle GET login request
      *
      * @param model     a holder for model attributes and is primarily designed for adding attributes to the model
      * @param req       servletRequest contains: session id, attribute, and other information from slack response
      */
     @GetMapping("/login")
     public String getLogin(Model model, HttpServletRequest req) throws FileNotFoundException {
-        // retrieve the ID of this session
-        String sessionId = req.getSession(true).getId();
-        // determine whether the user is already authenticated
+        String sessionId = req.getSession(true).getId(); // retrieve the ID of this session
         Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
+
         // config_key will be uploaded to the session when the user visited login page
         Object clientConfigKeyObj = req.getSession().getAttribute(LoginConstants.SLACK_API_CONFIG_KEY);
+
         // is_fail value is '1' if the user try to access other pages without logging in, otherwise '0'
         String clientFailToLogin = (String) req.getSession().getAttribute(LoginConstants.IS_FAIL_TO_LOGIN);
 
@@ -176,6 +176,12 @@ public class LoginController {
         req.getSession().setAttribute(LoginConstants.IS_FAIL_TO_LOGIN, "0");
     }
 
+    /**
+     * A helper method to get client info database
+     *
+     * @param userId    unique Id for the user
+     * @return          ClientInfo object that will contain all the user information
+     */
     private ClientInfo getClientInfoDatabase(String userId) {
         ClientInfo clientInfo = new ClientInfo();
 

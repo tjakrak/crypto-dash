@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LogoutController {
 
     /**
-     * a method to handle GET logout request
+     * A method to handle GET logout request
      *
      * @param req servletRequest contains that contains sessionId and its attributes
      */

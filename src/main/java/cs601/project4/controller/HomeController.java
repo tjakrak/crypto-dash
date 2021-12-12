@@ -7,8 +7,6 @@ import cs601.project4.utilities.LoginConstants;
 import cs601.project4.tableobject.ClientInfo;
 //import org.springframework.data.repository.query.Param;
 import cs601.project4.tableobject.Event;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +23,13 @@ public class HomeController {
     private static final int EVENT_PER_PAGE = 7;
 
     /**
-     * a method to handle GET home request
+     * A method to handle GET home request
      *
-     * @param model     a holder for model attributes and is primarily designed for adding attributes to the model
-     * @param req       servletRequest contains: session id, attribute, and other information from slack response
+     * @param req  servletRequest contains: session id, attribute, and other information from slack response
+     * @return     path to be processed at getHomeByPage method
      */
     @GetMapping("/home")
-    public String getHome(Model model, HttpServletRequest req) {
+    public String getHome(HttpServletRequest req) {
         Gson gson = new Gson();
         Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
         ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
@@ -44,8 +42,15 @@ public class HomeController {
         return "redirect:/home/1/search-mode/0/q=";
     }
 
+    /**
+     * A method to handle POST home request
+     *
+     * @param search    user search query - equal to "" if there is no query
+     * @param req       servletRequest contains: session id, attribute, and other information from slack response
+     * @return          path to be processed at getHomeByPage method
+     */
     @PostMapping("/home")
-    public String postHome(@RequestParam("search-bar") String search, Model model, HttpServletRequest req) {
+    public String postHome(@RequestParam("search-bar") String search, HttpServletRequest req) {
         Gson gson = new Gson();
         Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
         ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
@@ -58,11 +63,21 @@ public class HomeController {
         return "redirect:/home/1/search-mode/1/q=" + search;
     }
 
+    /**
+     * A method to handle GET home request
+     *
+     * @param pageNum       the current page number
+     * @param isSearchMode  if user is using search feature isSearchMode = 1 otherwise 0
+     * @param searchQuery   user search query - equal to "" if there is no query
+     * @param model         a holder for model attributes and is primarily designed for adding attributes to the model
+     * @param req           servletRequest contains: session id, attribute, and other information from slack response
+     * @return              call home.html
+     */
     @RequestMapping(value = "/home/{pageNum}/search-mode/{bool}/q={searchQuery}", method = RequestMethod.GET)
-    public String getEventPage(
+    public String getHomeByPage(
             @PathVariable(name = "pageNum") int pageNum,
             @PathVariable(name = "bool") int isSearchMode,
-            @PathVariable String searchQuery,               // Equal to "" if there is no query
+            @PathVariable String searchQuery,
             Model model, HttpServletRequest req
     ) {
         System.out.println(searchQuery);
@@ -99,6 +114,13 @@ public class HomeController {
         return "home";
     }
 
+    /**
+     * A method to handle GET home request
+     *
+     * @param limit
+     * @param offset
+     * @return eventList
+     */
     private List<Event> getListOfAllEvents(int limit, int offset) {
         List<Event> eventList = new ArrayList<>();
         try (Connection connection = DBCPDataSource.getConnection()){
@@ -111,10 +133,18 @@ public class HomeController {
         return eventList;
     }
 
+    /**
+     * A method to handle GET home request
+     *
+     * @param search   servletRequest contains: session id, attribute, and other information from slack response
+     * @param limit    limit size
+     * @param offset   offset size
+     * @return         list of events based on user search query
+     */
     private List<Event> getListOfFilteredEvents(String search, int limit, int offset) {
         List<Event> eventList = new ArrayList<>();
         try (Connection connection = DBCPDataSource.getConnection()){
-            eventList = DataFetcherManager.getSearch(connection, search, 8, 0);
+            eventList = DataFetcherManager.getSearch(connection, search, limit, offset);
         } catch(SQLException e) {
             e.printStackTrace();
         }

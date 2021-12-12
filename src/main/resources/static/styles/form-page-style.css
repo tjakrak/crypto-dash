@@ -107,6 +107,12 @@ ticket-purchase and setting page
     padding-bottom: 30px;
 }
 
+#wrapper-content #setting-message{
+    text-align: center;
+    color: red;
+    padding-top: 50px;
+}
+
 #middle-button-wrapper{
     padding: 10px;
     margin-left: 47%;
@@ -133,3 +139,4 @@ ticket-transfer
 .ticket-transfer-input-box{
     width: 270px;
 }
+

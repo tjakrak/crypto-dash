@@ -30,7 +30,7 @@
         <div id="inner-body-bg">
             <div id="wrapper-content">
                 <h1 id="main-title">Edit Profile</h1>
-                <p id="setting-message" th:text="${responseMsg}" />
+                <p id="setting-message" th:text="${responseMsg}"></p>
                 <!--form container-->
                 <div id="form-wrapper">
                     <!--action - calling http POST method to /user-settings-->
@@ -49,7 +49,7 @@
                             <li>
                                 <input class="setting-input-box" type="text" maxlength = "40" id="name" name="name" th:value="${currName}" />
                             <li>
-                                <input class="setting-input-box" type="text" maxlength = "40" id="email" name="email" th:value="${currEmail}" />
+                                <input class="setting-input-box" type="email" maxlength = "40" id="email" name="email" th:value="${currEmail}" />
                             </li>
                             <li>
                                 <input class="setting-input-box" type="text" maxlength = "20" id="zipcode" name="zipcode" th:value="${currZipcode}" />

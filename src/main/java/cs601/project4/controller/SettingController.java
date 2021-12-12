@@ -18,10 +18,15 @@ import java.sql.SQLException;
 
 @Controller
 public class SettingController {
-    Gson gson = new Gson();
 
+    /**
+     * A method to handle GET user setting page
+     *
+     * @return setting.html page
+     */
     @GetMapping("/user/settings")
     public String getUserSetting(Model model, HttpServletRequest req) {
+        Gson gson = new Gson();
         Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
         ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
 
@@ -41,9 +46,15 @@ public class SettingController {
         return "setting";
     }
 
+    /**
+     * A method to handle POST user setting page
+     *
+     * @return setting.html
+     */
     @PostMapping("/user/settings")
     public String postUserSetting(@ModelAttribute("settingBean") ClientInfo settingBean,
                                   Model model, HttpServletRequest req) {
+        Gson gson = new Gson();
         Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
         ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
 
@@ -58,9 +69,10 @@ public class SettingController {
         String zipcode = settingBean.getZipcode();
         String userId = clientInfo.getUniqueId();
 
-        String validationMsg = validateInput(name, email);
+        String responseMsg = validateInput(name, email);
 
-        if (validationMsg.equals("validated")) {
+        if (responseMsg.equals("validated")) {
+            responseMsg = "Your changes has been saved!";
             updateUserInfoDatabase(name, email, zipcode, userId);
         }
 
@@ -70,12 +82,18 @@ public class SettingController {
         req.getSession().removeAttribute(LoginConstants.CLIENT_INFO_KEY);
         req.getSession().setAttribute(LoginConstants.CLIENT_INFO_KEY,  new Gson().toJson(clientInfo));
 
-        String responseMsg = "Your changes has been saved!";
         model.addAttribute("responseMsg", responseMsg);
 
-        return "redirect:/user/settings";
+        return "setting";
     }
 
+    /**
+     * Validate input when the user changing their profile data
+     *
+     * @param name  updated name of the user
+     * @param email updated email of the user
+     * @return      response message for the user
+     */
     private String validateInput(String name, String email) {
         if (email.equals("") || name.equals("")) {
             return "Name or email cannot be empty";
@@ -86,7 +104,12 @@ public class SettingController {
         }
     }
 
-    // move this to other method
+    /**
+     * Helper method to get clientInfo by their user id
+     *
+     * @param userId unique id of the user
+     * @return       user info in a clientInfo object form
+     */
     private ClientInfo getClientInfoDatabase(String userId) {
         ClientInfo clientInfo = new ClientInfo();
 
@@ -99,6 +122,15 @@ public class SettingController {
         return clientInfo;
     }
 
+
+    /**
+     * Helper method to update user info after the user updated their profile
+     *
+     * @param name      name of the user
+     * @param email     unique email of the user
+     * @param zipcode   zip code of the user
+     * @param userId    unique id of the user
+     */
     private void  updateUserInfoDatabase(String name, String email, String zipcode, String userId) {
         try (Connection connection = DBCPDataSource.getConnection()){
             DataUpdaterManager.updateUser(connection, name, email, zipcode, userId);
