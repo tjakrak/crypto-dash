@@ -82,7 +82,6 @@ public class DataFetcherManager {
                                         int eventId, Boolean isDescending, int limit, int offset) throws SQLException {
         StringBuffer selectEventSql = new StringBuffer();
         selectEventSql.append("SELECT * FROM event JOIN user ON event.organizer_id = user.user_id");
-        //String selectEventSql = "SELECT * FROM event;";
 
         if (zipcode != null && eventId != 0) {
             selectEventSql.append(" WHERE zipcode = '" + zipcode + "' AND WHERE event_id = '" + eventId + "'");

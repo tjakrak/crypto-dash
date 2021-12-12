@@ -2,7 +2,7 @@
 <html xmlns:th="https://www.thymeleaf.org">
     <head>
         <link href="../static/styles/style.css" th:href="@{styles/style.css}" rel="stylesheet" />
-        <link href="../../../static/styles/style.css" th:href="@{../../../styles/style.css}" rel="stylesheet" />
+        <link href="../static/styles/style.css" th:href="@{../../../../styles/style.css}" rel="stylesheet" />
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
         <meta charset="UTF-8">
         <title>Tickets Purchase</title>
@@ -13,7 +13,7 @@
             <header>
                 <div id="header-left">
                     <!--upload logo to the page-->
-                    <a th:if="${currentPage > 0}" href="/"><img src="../static/images/NoStayHome.png" width="200" th:src="@{../../../images/NoStayHome.png}" /></a>
+                    <a th:if="${currentPage > 0}" href="/"><img src="../static/images/NoStayHome.png" width="200" th:src="@{../../../../images/NoStayHome.png}" /></a>
                     <a th:unless="${currentPage > 0}" href="/"><img src="../static/images/NoStayHome.png" width="200" th:src="@{images/NoStayHome.png}" /></a>
                 </div>
                 <div id="header-right">
@@ -41,7 +41,7 @@
                 <!--list of events here-->
                 <div id="event-list-content-wrapper">
                     <ul id="event-list">
-                        <li  th:each="event : ${listEvents}">
+                        <li  th:each="event : ${eventList}">
                             <a th:href="@{/event/{id}(id=${event.eventId})}">
                                 <div id="each-list-wrapper">
                                     <h1 th:text="${event.name}" />
@@ -56,14 +56,18 @@
 
                 <div id="pagination-wrapper">
                     <div class = "pagination">
-                        <a class="prev-num-next" th:if="${currentPage != 1}" th:href="@{'/home/' + ${currentPage - 1} + '/search-mode/' + ${isSearchMode}}"><</a>
+                        <a class="prev-num-next"
+                           th:if="${currentPage != 1}"
+                           th:href="@{'/home/' + ${currentPage - 1} + '/search-mode/' + ${isSearchMode} + '/q=' + ${searchQuery}}"><</a>
                         <span class="prev-num-next" th:unless="${currentPage != 1}">&nbsp;</span>
                     </div>
                     <div class = "pagination">
                         <span class="prev-num-next" th:text="${currentPage}"></span>
                     </div>
                     <div class="pagination">
-                        <a class="prev-num-next" th:if="${nextPage == true}" th:href="@{'/home/' + ${currentPage + 1}  + '/search-mode/' + ${isSearchMode}}">></a>
+                        <a class="prev-num-next"
+                           th:if="${nextPage == true}"
+                           th:href="@{'/home/' + ${currentPage + 1}  + '/search-mode/' + ${isSearchMode} + '/q=' + ${searchQuery}}">></a>
                     </div>
                 </div>
 

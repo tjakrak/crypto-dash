@@ -11,20 +11,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class HomeController {
 
-    private static final Logger LOGGER = LogManager.getLogger(HomeController.class);
     private static final int EVENT_PER_PAGE = 7;
 
     /**
@@ -44,23 +41,7 @@ public class HomeController {
             return "redirect:/login";
         }
 
-        try (Connection connection = DBCPDataSource.getConnection()){
-            List<Event> listEvents = DataFetcherManager.getEvents(connection,
-                    null, null, 0, false, 8, 0);
-            if (listEvents.size() > 7) {
-                listEvents.remove(listEvents.size() - 1);
-                model.addAttribute("nextPage", true);
-            }
-
-            model.addAttribute("currentPage", 1);
-            model.addAttribute("listEvents", listEvents);
-            model.addAttribute("name", clientInfo.getName());
-            model.addAttribute("isSearchMode", 0);
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
-
-        return "home";
+        return "redirect:/home/1/search-mode/0/q=";
     }
 
     @PostMapping("/home")
@@ -74,30 +55,17 @@ public class HomeController {
             return "redirect:/login";
         }
 
-        try (Connection connection = DBCPDataSource.getConnection()){
-            List<Event> listEvents = DataFetcherManager.getSearch(connection, search, 8, 0);
-
-            int listSize = listEvents.size();
-            if (listEvents.size() > 7) {
-                listEvents.remove(listEvents.size() - 1);
-                model.addAttribute("nextPage", true);
-            }
-
-            model.addAttribute("listEvents", listEvents);
-            model.addAttribute("name", clientInfo.getName());
-            model.addAttribute("currentPage", 1);
-            model.addAttribute("isSearchMode", 1);
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
-
-        return "home";
+        return "redirect:/home/1/search-mode/1/q=" + search;
     }
 
-    @GetMapping("/home/{pageNum}/search-mode/{bool}")
-    public String getEventPage(@PathVariable(name = "pageNum") int pageNum,
-                               @PathVariable(name = "bool") int isSearchMode,
-                               Model model, HttpServletRequest req) {
+    @RequestMapping(value = "/home/{pageNum}/search-mode/{bool}/q={searchQuery}", method = RequestMethod.GET)
+    public String getEventPage(
+            @PathVariable(name = "pageNum") int pageNum,
+            @PathVariable(name = "bool") int isSearchMode,
+            @PathVariable String searchQuery,               // Equal to "" if there is no query
+            Model model, HttpServletRequest req
+    ) {
+        System.out.println(searchQuery);
         Gson gson = new Gson();
         Object clientInfoObj = req.getSession().getAttribute(LoginConstants.CLIENT_INFO_KEY);
         ClientInfo clientInfo = gson.fromJson((String) clientInfoObj, ClientInfo.class);
@@ -108,25 +76,50 @@ public class HomeController {
         }
 
         int limit = pageNum * EVENT_PER_PAGE;
-        int offset = limit - EVENT_PER_PAGE;
+        int offset = (limit > EVENT_PER_PAGE) ? limit - EVENT_PER_PAGE : 0;
+
+        List<Event> eventList = getListOfAllEvents(limit + 1, offset);
+
+        if (isSearchMode == 1) {
+            eventList = getListOfFilteredEvents(searchQuery, limit, offset);
+        }
+
+        int listSize = eventList.size();
+        if (listSize > limit) {
+            model.addAttribute("nextPage", true);
+            eventList.remove(listSize - 1);
+        }
+
+        model.addAttribute("eventList", eventList);
+        model.addAttribute("name", clientInfo.getName());
+        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("isSearchMode", isSearchMode);
+        model.addAttribute("searchQuery", searchQuery);
+
+        return "home";
+    }
+
+    private List<Event> getListOfAllEvents(int limit, int offset) {
+        List<Event> eventList = new ArrayList<>();
         try (Connection connection = DBCPDataSource.getConnection()){
-            List<Event> listEvents = DataFetcherManager.getEvents(connection,
-                    null, null, 0, false, limit + 1, offset);
+            eventList = DataFetcherManager.getEvents(
+                    connection, null, null, 0, false, limit, offset
+            );
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return eventList;
+    }
 
-            int listSize = listEvents.size();
-            if (listSize > limit) {
-                model.addAttribute("nextPage", true);
-                listEvents.remove(listSize - 1);
-            }
-
-            model.addAttribute("listEvents", listEvents);
-            model.addAttribute("name", clientInfo.getName());
-            model.addAttribute("currentPage", pageNum);
-            model.addAttribute("isSearchMode", isSearchMode);
+    private List<Event> getListOfFilteredEvents(String search, int limit, int offset) {
+        List<Event> eventList = new ArrayList<>();
+        try (Connection connection = DBCPDataSource.getConnection()){
+            eventList = DataFetcherManager.getSearch(connection, search, 8, 0);
         } catch(SQLException e) {
             e.printStackTrace();
         }
 
-        return "home";
+        return eventList;
     }
+
 }
