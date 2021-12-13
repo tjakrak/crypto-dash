@@ -22,6 +22,16 @@ public class NoStayHomeAppMockTest {
     private MockMvc mockMvc;
 
     /**
+     * GET /event/create
+     */
+    @Test
+    public void getEventCreateResponseStatusAndContentTest() throws Exception {
+        this.mockMvc.perform(get("/event/create"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection()); // check if this page will give status 3xx and redirect to another page
+    }
+
+    /**
      * GET /login
      */
     @Test
