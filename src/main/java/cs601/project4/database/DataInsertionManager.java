@@ -77,23 +77,4 @@ public class DataInsertionManager {
         insertTransactionStmt.executeUpdate();
     }
 
-
-    public static void main(String[] args){
-        try (Connection connection = DBCPDataSource.getConnection()){
-//            insertToUser(connection, "Jose", 9984, "jsmith", "2026-09-01");
-        } catch(SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-//    @Value("${spring.datasource.url}")
-//    private String url;
-//
-//    @Value("${spring.datasource.username")
-//    private String username;
-//
-//    @Value("${spring.datasource.password")
-//    private String password;
-
 }

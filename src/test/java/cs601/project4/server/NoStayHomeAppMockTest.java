@@ -96,6 +96,16 @@ public class NoStayHomeAppMockTest {
     }
 
     /**
+     * POST /login
+     */
+    @Test
+    public void postLoginResponseStatusAndContentTest() throws Exception {
+        this.mockMvc.perform(post("/login"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError()); // check if response status is 4xx Not supported
+    }
+
+    /**
      * GET /
      */
     @Test
