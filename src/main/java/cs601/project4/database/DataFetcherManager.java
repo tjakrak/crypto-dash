@@ -85,12 +85,12 @@ public class DataFetcherManager {
 
         if (zipcode != null && eventId != 0) {
             selectEventSql.append(" WHERE zipcode = '" + zipcode + "' AND WHERE event_id = '" + eventId + "'");
+        } else if (organizerId != null) {
+            selectEventSql.append(" WHERE organizer_id = '" + organizerId + "'");
         } else if (zipcode != null) {
             selectEventSql.append(" WHERE zipcode = '" + zipcode + "'");
         } else if (eventId != 0) {
             selectEventSql.append(" WHERE event_id = " + eventId);
-        } else if (organizerId != null) {
-            selectEventSql.append(" WHERE organizer_id = '" + organizerId + "'");
         }
 
         if (isDescending) {
@@ -170,16 +170,49 @@ public class DataFetcherManager {
         return null;
     }
 
-    public static List<Event> getUserEventsInfo(Connection con, String userId) throws SQLException {
+    public static List<Event> getUserCurrentEventsInfo(Connection con, String userId) throws SQLException {
+        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
         String getTicketSql =
                 "SELECT event.event_id, event.name, user.name, t.ticket_count " +
                 "FROM event JOIN user ON event.organizer_id = user.user_id " +
                 "JOIN (SELECT event_id, COUNT(event_id) AS ticket_count " +
                 "FROM ticket WHERE user_id = '"+ userId +"' " +
-                "GROUP BY event_id) t ON t.event_id = event.event_id;";
+                "GROUP BY event_id) t ON t.event_id = event.event_id " +
+                "WHERE event.end_date > ?;";
 
-        PreparedStatement selectTicketStmt = con.prepareStatement(getTicketSql);
-        ResultSet results = selectTicketStmt.executeQuery();
+        PreparedStatement selectCurrTicketStmt = con.prepareStatement(getTicketSql);
+        selectCurrTicketStmt.setTimestamp(1, currentDate);
+
+        ResultSet results = selectCurrTicketStmt.executeQuery();
+
+        List<Event> eventList = new ArrayList<>();
+
+        while (results.next()) {
+            Event event = new Event();
+            event.setEventId(results.getInt("event.event_id"));
+            event.setName(results.getString("event.name"));
+            event.setOrganizerName(results.getString("user.name"));
+            event.setTicketCount(results.getInt("t.ticket_count"));
+            eventList.add(event);
+        }
+
+        return eventList;
+    }
+
+    public static List<Event> getUserPastEventsInfo(Connection con, String userId) throws SQLException {
+        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+        String getTicketSql =
+                "SELECT event.event_id, event.name, user.name, t.ticket_count " +
+                "FROM event JOIN user ON event.organizer_id = user.user_id " +
+                "JOIN (SELECT event_id, COUNT(event_id) AS ticket_count " +
+                "FROM ticket WHERE user_id = '"+ userId +"' " +
+                "GROUP BY event_id) t ON t.event_id = event.event_id " +
+                "WHERE event.end_date <= ?;";
+
+        PreparedStatement selectPastTicketStmt = con.prepareStatement(getTicketSql);
+        selectPastTicketStmt.setTimestamp(1, currentDate);
+
+        ResultSet results = selectPastTicketStmt.executeQuery();
 
         List<Event> eventList = new ArrayList<>();
 

@@ -34,14 +34,15 @@
                 <h1 id="main-title">My Tickets</h1>
                 <!--list of events here-->
                 <div id="form-content-wrapper">
-                    <table id = "table-wrapper">
+                    <h3 class="upcoming-past-event-title">Upcoming Event</h3>
+                    <table class = "table-wrapper">
                         <tr>
                             <th><h4>Event Name</h4></th>
                             <th><h4>Organizer</h4></th>
                             <th><h4>Ticket Amount</h4></th>
                         </tr>
                         <hr>
-                        <tr th:each="event : ${listEvents}">
+                        <tr th:each="event : ${listCurrEvents}">
                             <td>
                                 <a th:href="@{/event/{id}(id=${event.eventId})}"><p th:text="${event.name}" /></a>
                             </td>
@@ -50,6 +51,22 @@
                             <td>
                                 <a th:href="@{/ticket/{id}/transfer(id=${event.eventId})}">Transfer</a>
                             </td>
+                        </tr>
+                    </table>
+                    <h3 class="upcoming-past-event-title">Past Event</h3>
+                    <table class = "table-wrapper">
+                        <tr>
+                            <th><h4>Event Name</h4></th>
+                            <th><h4>Organizer</h4></th>
+                            <th><h4>Ticket Amount</h4></th>
+                        </tr>
+                        <hr>
+                        <tr th:each="event : ${listPastEvents}">
+                            <td>
+                                <a th:href="@{/event/{id}(id=${event.eventId})}"><p th:text="${event.name}" /></a>
+                            </td>
+                            <td><p th:text="${event.organizerName}" /></td>
+                            <td><p th:text="${event.ticketCount}" /></td>
                         </tr>
                     </table>
                 </div>

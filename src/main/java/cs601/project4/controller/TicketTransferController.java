@@ -41,10 +41,16 @@ public class TicketTransferController {
             return "redirect:/login";
         }
 
-        List<Event> listEvents = getUserEventList(clientInfo.getUniqueId());
+        List<Event> listCurrEvents = getUserCurrentEventList(clientInfo.getUniqueId());
+        List<Event> listPastEvents = getUserPastEventList(clientInfo.getUniqueId());
 
-        if (listEvents != null) {
-            model.addAttribute("listEvents", listEvents);
+
+        if (listCurrEvents != null) {
+            model.addAttribute("listCurrEvents", listCurrEvents);
+        }
+
+        if (listPastEvents != null) {
+            model.addAttribute("listPastEvents", listPastEvents);
         }
 
         return "my-ticket";
@@ -127,10 +133,27 @@ public class TicketTransferController {
      * @param userId    unique id for the user
      * @return          the list of events of a specific user
      */
-    private List<Event> getUserEventList(String userId) {
+    private List<Event> getUserCurrentEventList(String userId) {
         List<Event> eventList = new ArrayList<>();
         try (Connection connection = DBCPDataSource.getConnection()){
-             eventList = DataFetcherManager.getUserEventsInfo(connection, userId);
+             eventList = DataFetcherManager.getUserCurrentEventsInfo(connection, userId);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return eventList;
+    }
+
+    /**
+     * A helper method to get the number of ticket that the user has for a particular event
+     *
+     * @param userId    unique id for the user
+     * @return          the list of events of a specific user
+     */
+    private List<Event> getUserPastEventList(String userId) {
+        List<Event> eventList = new ArrayList<>();
+        try (Connection connection = DBCPDataSource.getConnection()){
+            eventList = DataFetcherManager.getUserPastEventsInfo(connection, userId);
         } catch(SQLException e) {
             e.printStackTrace();
         }

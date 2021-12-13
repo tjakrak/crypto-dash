@@ -102,7 +102,7 @@ public class DataFetcherManagerTest {
     public void getUserEventsInfoTest() {
         String expected = "Chinese New Year 2022";
         try (Connection connection = DBCPDataSource.getConnection()){
-            List<Event> eventList = DataFetcherManager.getUserEventsInfo(connection, "U02KS0CHMMKT02DN684M");
+            List<Event> eventList = DataFetcherManager.getUserCurrentEventsInfo(connection, "U02KS0CHMMKT02DN684M");
             if (eventList != null) {
                 String eventName = eventList.get(0).getName();
                 Assertions.assertEquals(eventName, expected);
