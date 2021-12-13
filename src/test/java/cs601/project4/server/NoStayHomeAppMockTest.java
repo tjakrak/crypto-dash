@@ -32,6 +32,59 @@ public class NoStayHomeAppMockTest {
     }
 
     /**
+     * POST /event/create
+     */
+    @Test
+    public void postEventCreateResponseStatusAndContentTest() throws Exception {
+        this.mockMvc.perform(post("/event/create"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError()); // check if response status is 4xx Not supported
+    }
+
+    /**
+     * GET /event/{eventId}
+     */
+    @Test
+    public void getEventDetailResponseStatusAndContentTest() throws Exception {
+        this.mockMvc.perform(get("/event/1"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection()); // check if this page will give status 3xx and redirect to another page
+    }
+
+    /**
+     * POST /event/{eventId}
+     */
+    @Test
+    public void postEventDetailResponseStatusAndContentTest() throws Exception {
+        this.mockMvc.perform(post("/event/1"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError()); // check if response status is 4xx Not supported
+    }
+
+    /**
+     * GET /home
+     */
+    @Test
+    public void getHomeResponseStatusTest() throws Exception {
+        this.mockMvc.perform(get("/home"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection()); // check if this page will give status 3xx and redirect to another page
+
+        //FOUND(302, HttpStatus.Series.REDIRECTION, "Found"),
+    }
+
+    /**
+     * POST /home
+     */
+    @Test
+    public void postHomeResponseStatusTest() throws Exception {
+        this.mockMvc.perform(post("/home"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError()); // check if response status is 4xx Not supported
+    }
+
+
+    /**
      * GET /login
      */
     @Test
@@ -46,7 +99,7 @@ public class NoStayHomeAppMockTest {
      * GET /
      */
     @Test
-    public void getHomeResponseStatusTest() throws Exception {
+    public void getLandingPageResponseStatusTest() throws Exception {
         this.mockMvc.perform(get("/"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection()); // check if this page will give status 3xx and redirect to another page
