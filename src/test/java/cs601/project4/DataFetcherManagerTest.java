@@ -2,20 +2,63 @@ package cs601.project4;
 
 import cs601.project4.database.DBCPDataSource;
 import cs601.project4.database.DataFetcherManager;
+import cs601.project4.tableobject.ClientInfo;
 import cs601.project4.tableobject.Event;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 public class DataFetcherManagerTest {
+    private static final Logger LOGGER = LogManager.getLogger(DataFetcherManagerTest.class);
+
+    @BeforeAll
+    public static void initialSetup() {
+        LOGGER.info("startup - creating DB connection");
+        //inserting data to user table
+        insertDataToUserTable();
+
+    }
+
+    public static void insertDataToUserTable() {
+        String insertMockUserSql = "INSERT INTO user (user_id, name, email, zipcode, created_at) VALUES (?, ?, ?, ?, ?);";
+
+        try (Connection con = DBCPDataSource.getConnection()){
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            PreparedStatement insertMockUserStmt = con.prepareStatement(insertMockUserSql);
+            insertMockUserStmt.setString(1, "XXXXXXXXXXXXXXXXXXXX");
+            insertMockUserStmt.setString(2, "UnitTest");
+            insertMockUserStmt.setString(3, "unittest@dons.usfca.edu");
+            insertMockUserStmt.setString(4, "99999");
+            insertMockUserStmt.setTimestamp(5, timestamp);
+            insertMockUserStmt.execute();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @AfterAll
+    public static void destroy() {
+        String deleteUser =
+                "DELETE FROM user WHERE user_id = 'XXXXXXXXXXXXXXXXXXXX';";
+        try (Connection con = DBCPDataSource.getConnection()){
+            PreparedStatement DeleteUserStmt = con.prepareStatement(deleteUser);
+            DeleteUserStmt.execute();
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     public void isUserIdExistTrue() {
         try (Connection connection = DBCPDataSource.getConnection()){
-            Boolean isExist = DataFetcherManager.isUserIdExist(connection, "U02KS0CHMMKT02DN684M");
+            Boolean isExist = DataFetcherManager.isUserIdExist(connection, "XXXXXXXXXXXXXXXXXXXX");
             Assertions.assertTrue(isExist);
         } catch(SQLException e) {
             e.printStackTrace();
@@ -25,8 +68,30 @@ public class DataFetcherManagerTest {
     @Test
     public void isUserIdExistFalse() {
         try (Connection connection = DBCPDataSource.getConnection()){
-            Boolean isExist = DataFetcherManager.isUserIdExist(connection, "U02");
+            Boolean isExist = DataFetcherManager.isUserIdExist(connection, "NNNNNNNNNNNNNNNNNNNN");
             Assertions.assertFalse(isExist);
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void getClientInfoTest() {
+        String expected = "UnitTest";
+        try (Connection connection = DBCPDataSource.getConnection()){
+            ClientInfo clientInfo = DataFetcherManager.getClientInfo(connection, "XXXXXXXXXXXXXXXXXXXX");
+            Assertions.assertEquals(expected, clientInfo.getName());
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void getClientIdByEmailTest() {
+        String expected = "XXXXXXXXXXXXXXXXXXXX";
+        try (Connection connection = DBCPDataSource.getConnection()){
+            ClientInfo clientInfo = DataFetcherManager.getClientIdByEmail(connection, "unittest@dons.usfca.edu");
+            Assertions.assertEquals(expected, clientInfo.getUniqueId());
         } catch(SQLException e) {
             e.printStackTrace();
         }
